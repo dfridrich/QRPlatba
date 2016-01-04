@@ -8,6 +8,10 @@ Knihovna pro generování QR plateb v PHP.
 
 `composer require dfridrich/qrplatba:~1.0`
 
+## Dokumentace
+
+Dokumentaci najdete na adrese http://dfridrich.github.io/QRPlatba/
+
 ## Příklad
 
 ```php
