@@ -1,5 +1,5 @@
 {
-  "name": "dfridrich/QRPlatba",
+  "name": "dfridrich/qr-platba",
   "type": "library",
   "description": "Generování QR plateb v PHP.",
   "keywords": [
