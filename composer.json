@@ -1,0 +1,27 @@
+{
+  "name": "dfridrich/QRPlatba",
+  "type": "library",
+  "description": "Generování QR plateb v PHP.",
+  "keywords": [
+    "php",
+    "qr",
+    "platba"
+  ],
+  "homepage": "https://github.com/dfridrich/QRPlatba",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Dennis Fridrich",
+      "email": "fridrich.dennis@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.4.0",
+    "endroid/qrcode": "^1.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Defr\\QRPlatba\\": "src/"
+    }
+  }
+}
