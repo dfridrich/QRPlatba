@@ -1,6 +1,7 @@
 # QR Platba
 
 [![Build Status](https://travis-ci.org/dfridrich/QRPlatba.svg)](https://travis-ci.org/dfridrich/QRPlatba)
+[![Coverage Status](https://coveralls.io/repos/dfridrich/QRPlatba/badge.svg?branch=master&service=github)](https://coveralls.io/github/dfridrich/QRPlatba?branch=master)
 
 Knihovna pro generování QR plateb v PHP.
 
