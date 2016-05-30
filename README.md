@@ -9,7 +9,7 @@ Knihovna pro generování QR plateb v PHP.
 
 ## Instalace pomocí Composeru
 
-`composer require dfridrich/qrplatba:~1.0`
+`composer require dfridrich/qr-platba:~1.0`
 
 ## Dokumentace
 
