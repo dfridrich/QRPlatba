@@ -1,5 +1,7 @@
 # QR Platba
 
+[![Latest Stable Version](https://poser.pugx.org/dfridrich/qr-platba/v/stable)](https://packagist.org/packages/dfridrich/qr-platba)
+[![Total Downloads](https://poser.pugx.org/dfridrich/qr-platba/downloads)](https://packagist.org/packages/dfridrich/qr-platba)
 [![Build Status](https://travis-ci.org/dfridrich/QRPlatba.svg)](https://travis-ci.org/dfridrich/QRPlatba)
 [![Coverage Status](https://coveralls.io/repos/dfridrich/QRPlatba/badge.svg?branch=master&service=github)](https://coveralls.io/github/dfridrich/QRPlatba?branch=master)
 
