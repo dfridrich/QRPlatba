@@ -25,7 +25,7 @@ class QRPlatba
         'ACC'     => null, // Max. 46 - znaků IBAN, BIC Identifikace protistrany !povinny
         'ALT-ACC' => null, // Max. 93 - znaků Seznam alternativnich uctu. odddeleny carkou,
         'AM'      => null, //Max. 10 znaků - Desetinné číslo Výše částky platby.
-        'CC'      => 'CZK', // Právě 3 znaky - Měna platby.
+        'CC'      => null, // Právě 3 znaky - Měna platby.
         'DT'      => null, // Právě 8 znaků - Datum splatnosti YYYYMMDD.
         'MSG'     => null, // Max. 60 znaků - Zpráva pro příjemce.
         'X-VS'    => null, // Max. 10 znaků - Celé číslo - Variabilní symbol
@@ -110,6 +110,19 @@ class QRPlatba
     public function setVariableSymbol($vs)
     {
         $this->keys['X-VS'] = $vs;
+
+        return $this;
+    }
+
+    /**
+     * Nastavení měny platby.
+     *
+     * @param $cc
+     * @return $this
+     */
+    public function setCurrency($cc)
+    {
+        $this->keys['CC'] = $cc;
 
         return $this;
     }
