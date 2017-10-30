@@ -21,6 +21,11 @@ class QRPlatba
     /**
      * @var array
      */
+    private $currencies = ["AED", "AFN", "ALL", "AMD", "ANG", "AOA", "ARS", "AUD", "AWG", "AZN", "BAM", "BBD", "BDT", "BGN", "BHD", "BIF", "BMD", "BND", "BOB", "BRL", "BSD", "BTN", "BWP", "BYN", "BZD", "CAD", "CDF", "CHF", "CLP", "CNY", "COP", "CRC", "CUC", "CUP", "CVE", "CZK", "DJF", "DKK", "DOP", "DZD", "EGP", "ERN", "ETB", "EUR", "FJD", "FKP", "GBP", "GEL", "GGP", "GHS", "GIP", "GMD", "GNF", "GTQ", "GYD", "HKD", "HNL", "HRK", "HTG", "HUF", "IDR", "ILS", "IMP", "INR", "IQD", "IRR", "ISK", "JEP", "JMD", "JOD", "JPY", "KES", "KGS", "KHR", "KMF", "KPW", "KRW", "KWD", "KYD", "KZT", "LAK", "LBP", "LKR", "LRD", "LSL", "LYD", "MAD", "MDL", "MGA", "MKD", "MMK", "MNT", "MOP", "MRO", "MUR", "MVR", "MWK", "MXN", "MYR", "MZN", "NAD", "NGN", "NIO", "NOK", "NPR", "NZD", "OMR", "PAB", "PEN", "PGK", "PHP", "PKR", "PLN", "PYG", "QAR", "RON", "RSD", "RUB", "RWF", "SAR", "SBD", "SCR", "SDG", "SEK", "SGD", "SHP", "SLL", "SOS", "SPL", "SRD", "STD", "SVC", "SYP", "SZL", "THB", "TJS", "TMT", "TND", "TOP", "TRY", "TTD", "TVD", "TWD", "TZS", "UAH", "UGX", "USD", "UYU", "UZS", "VEF", "VND", "VUV", "WST", "XAF", "XCD", "XDR", "XOF", "XPF", "YER", "ZAR", "ZMW", "ZWD"];
+
+    /**
+     * @var array
+     */
     private $keys = [
         'ACC'     => null, // Max. 46 - znaků IBAN, BIC Identifikace protistrany !povinny
         'ALT-ACC' => null, // Max. 93 - znaků Seznam alternativnich uctu. odddeleny carkou,
@@ -48,8 +53,9 @@ class QRPlatba
      * @param null $account
      * @param null $amount
      * @param null $variable
+     * @param null $currency
      */
-    public function __construct($account = null, $amount = null, $variable = null)
+    public function __construct($account = null, $amount = null, $variable = null, $currency = null)
     {
         if ($account) {
             $this->setAccount($account);
@@ -59,6 +65,12 @@ class QRPlatba
         }
         if ($variable) {
             $this->setVariableSymbol($variable);
+        }
+        if ($currency) {
+            if (!in_array($currency, $this->currencies)) {
+                throw new \InvalidArgumentException(sprintf("Currency %s is not supported.", $currency));
+            }
+            $this->setCurrency($currency);
         }
     }
 
@@ -166,6 +178,17 @@ class QRPlatba
     public function setDueDate(\DateTime $date)
     {
         $this->keys['DT'] = $date->format('Ymd');
+
+        return $this;
+    }
+
+    /**
+     * @param $cc
+     * @return $this
+     */
+    public function setCurrency($cc)
+    {
+        $this->keys['CC'] = $cc;
 
         return $this;
     }

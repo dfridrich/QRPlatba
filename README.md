@@ -31,6 +31,7 @@ $qrPlatba->setAccount("12-3456789012/0100")
     ->setMessage("Toto je první QR platba.")
     ->setSpecificSymbol("0308")
     ->setSpecificSymbol("1234")
+    ->setCurrency("CZK") // Výchozí je CZK, lze zadat jakýkoli ISO kód měny
     ->setDueDate(new \DateTime());
 
 echo $qrPlatba->getQRCodeImage();
