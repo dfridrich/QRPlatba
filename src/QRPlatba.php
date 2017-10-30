@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the library "QRPlatba".
+ *
+ * (c) Dennis Fridrich <fridrich.dennis@gmail.com>
+ *
+ * For the full copyright and license information,
+ * please view LICENSE.
+ */
+
 namespace Defr\QRPlatba;
 
 use Endroid\QrCode\QrCode;
@@ -7,44 +16,205 @@ use Endroid\QrCode\QrCode;
 /**
  * Knihovna pro generování QR plateb v PHP.
  *
- * @package Defr\QRPlatba
  * @see https://raw.githubusercontent.com/snoblucha/QRPlatba/master/QRPlatba.php
  */
 class QRPlatba
 {
-
     /**
-     * Verze QR formátu QR Platby
+     * Verze QR formátu QR Platby.
      */
     const VERSION = '1.0';
 
     /**
      * @var array
      */
-    private static $currencies = ["AED", "AFN", "ALL", "AMD", "ANG", "AOA", "ARS", "AUD", "AWG", "AZN", "BAM", "BBD", "BDT", "BGN", "BHD", "BIF", "BMD", "BND", "BOB", "BRL", "BSD", "BTN", "BWP", "BYN", "BZD", "CAD", "CDF", "CHF", "CLP", "CNY", "COP", "CRC", "CUC", "CUP", "CVE", "CZK", "DJF", "DKK", "DOP", "DZD", "EGP", "ERN", "ETB", "EUR", "FJD", "FKP", "GBP", "GEL", "GGP", "GHS", "GIP", "GMD", "GNF", "GTQ", "GYD", "HKD", "HNL", "HRK", "HTG", "HUF", "IDR", "ILS", "IMP", "INR", "IQD", "IRR", "ISK", "JEP", "JMD", "JOD", "JPY", "KES", "KGS", "KHR", "KMF", "KPW", "KRW", "KWD", "KYD", "KZT", "LAK", "LBP", "LKR", "LRD", "LSL", "LYD", "MAD", "MDL", "MGA", "MKD", "MMK", "MNT", "MOP", "MRO", "MUR", "MVR", "MWK", "MXN", "MYR", "MZN", "NAD", "NGN", "NIO", "NOK", "NPR", "NZD", "OMR", "PAB", "PEN", "PGK", "PHP", "PKR", "PLN", "PYG", "QAR", "RON", "RSD", "RUB", "RWF", "SAR", "SBD", "SCR", "SDG", "SEK", "SGD", "SHP", "SLL", "SOS", "SPL", "SRD", "STD", "SVC", "SYP", "SZL", "THB", "TJS", "TMT", "TND", "TOP", "TRY", "TTD", "TVD", "TWD", "TZS", "UAH", "UGX", "USD", "UYU", "UZS", "VEF", "VND", "VUV", "WST", "XAF", "XCD", "XDR", "XOF", "XPF", "YER", "ZAR", "ZMW", "ZWD"];
+    private static $currencies = [
+        'AED',
+        'AFN',
+        'ALL',
+        'AMD',
+        'ANG',
+        'AOA',
+        'ARS',
+        'AUD',
+        'AWG',
+        'AZN',
+        'BAM',
+        'BBD',
+        'BDT',
+        'BGN',
+        'BHD',
+        'BIF',
+        'BMD',
+        'BND',
+        'BOB',
+        'BRL',
+        'BSD',
+        'BTN',
+        'BWP',
+        'BYN',
+        'BZD',
+        'CAD',
+        'CDF',
+        'CHF',
+        'CLP',
+        'CNY',
+        'COP',
+        'CRC',
+        'CUC',
+        'CUP',
+        'CVE',
+        'CZK',
+        'DJF',
+        'DKK',
+        'DOP',
+        'DZD',
+        'EGP',
+        'ERN',
+        'ETB',
+        'EUR',
+        'FJD',
+        'FKP',
+        'GBP',
+        'GEL',
+        'GGP',
+        'GHS',
+        'GIP',
+        'GMD',
+        'GNF',
+        'GTQ',
+        'GYD',
+        'HKD',
+        'HNL',
+        'HRK',
+        'HTG',
+        'HUF',
+        'IDR',
+        'ILS',
+        'IMP',
+        'INR',
+        'IQD',
+        'IRR',
+        'ISK',
+        'JEP',
+        'JMD',
+        'JOD',
+        'JPY',
+        'KES',
+        'KGS',
+        'KHR',
+        'KMF',
+        'KPW',
+        'KRW',
+        'KWD',
+        'KYD',
+        'KZT',
+        'LAK',
+        'LBP',
+        'LKR',
+        'LRD',
+        'LSL',
+        'LYD',
+        'MAD',
+        'MDL',
+        'MGA',
+        'MKD',
+        'MMK',
+        'MNT',
+        'MOP',
+        'MRO',
+        'MUR',
+        'MVR',
+        'MWK',
+        'MXN',
+        'MYR',
+        'MZN',
+        'NAD',
+        'NGN',
+        'NIO',
+        'NOK',
+        'NPR',
+        'NZD',
+        'OMR',
+        'PAB',
+        'PEN',
+        'PGK',
+        'PHP',
+        'PKR',
+        'PLN',
+        'PYG',
+        'QAR',
+        'RON',
+        'RSD',
+        'RUB',
+        'RWF',
+        'SAR',
+        'SBD',
+        'SCR',
+        'SDG',
+        'SEK',
+        'SGD',
+        'SHP',
+        'SLL',
+        'SOS',
+        'SPL',
+        'SRD',
+        'STD',
+        'SVC',
+        'SYP',
+        'SZL',
+        'THB',
+        'TJS',
+        'TMT',
+        'TND',
+        'TOP',
+        'TRY',
+        'TTD',
+        'TVD',
+        'TWD',
+        'TZS',
+        'UAH',
+        'UGX',
+        'USD',
+        'UYU',
+        'UZS',
+        'VEF',
+        'VND',
+        'VUV',
+        'WST',
+        'XAF',
+        'XCD',
+        'XDR',
+        'XOF',
+        'XPF',
+        'YER',
+        'ZAR',
+        'ZMW',
+        'ZWD',
+    ];
 
     /**
      * @var array
      */
     private $keys = [
-        'ACC'     => null, // Max. 46 - znaků IBAN, BIC Identifikace protistrany !povinny
+        'ACC' => null, // Max. 46 - znaků IBAN, BIC Identifikace protistrany !povinny
         'ALT-ACC' => null, // Max. 93 - znaků Seznam alternativnich uctu. odddeleny carkou,
-        'AM'      => null, //Max. 10 znaků - Desetinné číslo Výše částky platby.
-        'CC'      => 'CZK', // Právě 3 znaky - Měna platby.
-        'DT'      => null, // Právě 8 znaků - Datum splatnosti YYYYMMDD.
-        'MSG'     => null, // Max. 60 znaků - Zpráva pro příjemce.
-        'X-VS'    => null, // Max. 10 znaků - Celé číslo - Variabilní symbol
-        'X-SS'    => null, // Max. 10 znaků - Celé číslo - Specifický symbol
-        'X-KS'    => null, // Max. 10 znaků - Celé číslo - Konstantní symbol
-        'RF'      => null, // Max. 16 znaků - Identifikátor platby pro příjemce.
-        'RN'      => null, // Max. 35 znaků - Jméno příjemce.
-        'PT'      => null, // Právě 3 znaky - Typ platby.
-        'CRC32'   => null, // Právě 8 znaků - Kontrolní součet - HEX.
-        'NT'      => null, // Právě 1 znak P|E - Identifikace kanálu pro zaslání notifikace výstavci platby.
-        'NTA'     => null, //Max. 320 znaků - Telefonní číslo v mezinárodním nebo lokálním vyjádření nebo E-mailová adresa
-        'X-PER'   => null, // Max. 2 znaky -  Celé číslo - Počet dní, po které se má provádět pokus o opětovné provedení neúspěšné platby
-        'X-ID'    => null, // Max. 20 znaků. -  Identifikátor platby na straně příkazce. Jedná se o interní ID, jehož použití a interpretace závisí na bance příkazce.
-        'X-URL'   => null, // Max. 140 znaků. -  URL, které je možno využít pro vlastní potřebu
+        'AM' => null, //Max. 10 znaků - Desetinné číslo Výše částky platby.
+        'CC' => 'CZK', // Právě 3 znaky - Měna platby.
+        'DT' => null, // Právě 8 znaků - Datum splatnosti YYYYMMDD.
+        'MSG' => null, // Max. 60 znaků - Zpráva pro příjemce.
+        'X-VS' => null, // Max. 10 znaků - Celé číslo - Variabilní symbol
+        'X-SS' => null, // Max. 10 znaků - Celé číslo - Specifický symbol
+        'X-KS' => null, // Max. 10 znaků - Celé číslo - Konstantní symbol
+        'RF' => null, // Max. 16 znaků - Identifikátor platby pro příjemce.
+        'RN' => null, // Max. 35 znaků - Jméno příjemce.
+        'PT' => null, // Právě 3 znaky - Typ platby.
+        'CRC32' => null, // Právě 8 znaků - Kontrolní součet - HEX.
+        'NT' => null, // Právě 1 znak P|E - Identifikace kanálu pro zaslání notifikace výstavci platby.
+        'NTA' => null, //Max. 320 znaků - Telefonní číslo v mezinárodním nebo lokálním vyjádření nebo E-mailová adresa
+        'X-PER' => null, // Max. 2 znaky -  Celé číslo - Počet dní, po které se má provádět pokus o opětovné provedení neúspěšné platby
+        'X-ID' => null, // Max. 20 znaků. -  Identifikátor platby na straně příkazce. Jedná se o interní ID, jehož použití a interpretace závisí na bance příkazce.
+        'X-URL' => null, // Max. 140 znaků. -  URL, které je možno využít pro vlastní potřebu
     ];
 
     /**
@@ -67,8 +237,8 @@ class QRPlatba
             $this->setVariableSymbol($variable);
         }
         if ($currency) {
-            if (!in_array($currency, $this->currencies)) {
-                throw new \InvalidArgumentException(sprintf("Currency %s is not supported.", $currency));
+            if (!in_array($currency, $this->currencies, true)) {
+                throw new \InvalidArgumentException(sprintf('Currency %s is not supported.', $currency));
             }
             $this->setCurrency($currency);
         }
@@ -80,6 +250,7 @@ class QRPlatba
      * @param null $account
      * @param null $amount
      * @param null $variable
+     *
      * @return QRPlatba
      */
     public static function create($account = null, $amount = null, $variable = null)
@@ -91,6 +262,7 @@ class QRPlatba
      * Nastavení čísla účtu ve formátu 12-3456789012/0100.
      *
      * @param $account
+     *
      * @return $this
      */
     public function setAccount($account)
@@ -104,11 +276,12 @@ class QRPlatba
      * Nastavení částky.
      *
      * @param $amount
+     *
      * @return $this
      */
     public function setAmount($amount)
     {
-        $this->keys['AM'] = sprintf("%.2f", $amount);
+        $this->keys['AM'] = sprintf('%.2f', $amount);
 
         return $this;
     }
@@ -117,6 +290,7 @@ class QRPlatba
      * Nastavení variabilního symbolu.
      *
      * @param $vs
+     *
      * @return $this
      */
     public function setVariableSymbol($vs)
@@ -130,6 +304,7 @@ class QRPlatba
      * Nastavení konstatního symbolu.
      *
      * @param $cs
+     *
      * @return $this
      */
     public function setConstantSymbol($cs)
@@ -143,12 +318,14 @@ class QRPlatba
      * Nastavení specifického symbolu.
      *
      * @param $ss
-     * @return $this
+     *
      * @throws QRPlatbaException
+     *
+     * @return $this
      */
     public function setSpecificSymbol($ss)
     {
-        if (strlen($ss) > 10) {
+        if (mb_strlen($ss) > 10) {
             throw new QRPlatbaException();
         }
         $this->keys['X-SS'] = $ss;
@@ -160,11 +337,12 @@ class QRPlatba
      * Nastavení zprávy pro příjemce. Z řetězce bude odstraněna diaktirika.
      *
      * @param $msg
+     *
      * @return $this
      */
     public function setMessage($msg)
     {
-        $this->keys['MSG'] = substr($this->stripDiacritics($msg), 0, 60);
+        $this->keys['MSG'] = mb_substr($this->stripDiacritics($msg), 0, 60);
 
         return $this;
     }
@@ -173,6 +351,7 @@ class QRPlatba
      * Nastavení data úhrady.
      *
      * @param \DateTime $date
+     *
      * @return $this
      */
     public function setDueDate(\DateTime $date)
@@ -184,6 +363,7 @@ class QRPlatba
 
     /**
      * @param $cc
+     *
      * @return $this
      */
     public function setCurrency($cc)
@@ -200,13 +380,12 @@ class QRPlatba
      */
     public function __toString()
     {
-
-        $chunks = array('SPD', self::VERSION);
+        $chunks = ['SPD', self::VERSION];
         foreach ($this->keys as $key => $value) {
-            if ($value === null) {
+            if (null === $value) {
                 continue;
             }
-            $chunks[] = $key . ":" . $value;
+            $chunks[] = $key.':'.$value;
         }
 
         return implode('*', $chunks);
@@ -216,10 +395,12 @@ class QRPlatba
      * Metoda vrátí QR kód jako HTML tag, případně jako data-uri.
      *
      * @param bool $htmlTag
-     * @param int $size
-     * @param int $padding
-     * @return string
+     * @param int  $size
+     * @param int  $padding
+     *
      * @throws \Endroid\QrCode\Exceptions\ImageFunctionUnknownException
+     *
+     * @return string
      */
     public function getQRCodeImage($htmlTag = true, $size = 300, $padding = 10)
     {
@@ -235,10 +416,12 @@ class QRPlatba
      * Uložení QR kódu do souboru.
      *
      * @param null|string $filename File name of the QR Code
-     * @param null|string $format Format of the file (png, jpeg, jpg, gif, wbmp)
-     * @param int $size
-     * @param int $padding
+     * @param null|string $format   Format of the file (png, jpeg, jpg, gif, wbmp)
+     * @param int         $size
+     * @param int         $padding
+     *
      * @throws \Endroid\QrCode\Exceptions\ImageFunctionUnknownException
+     *
      * @return QRPlatba
      */
     public function saveQRCodeImage($filename = null, $format = 'png', $size = 300, $padding = 10)
@@ -254,13 +437,14 @@ class QRPlatba
      *
      * @param int $size
      * @param int $padding
+     *
      * @return QrCode
      */
     public function getQRCodeInstance($size = 300, $padding = 10)
     {
         $qrCode = new QrCode();
         $qrCode
-            ->setText((string)$this)
+            ->setText((string) $this)
             ->setSize($size)
             ->setPadding($padding)
             ->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0])
@@ -273,6 +457,7 @@ class QRPlatba
      * Převedení čísla účtu na formát IBAN.
      *
      * @param $accountNumber
+     *
      * @return string
      */
     public static function accountToIban($accountNumber)
@@ -281,23 +466,23 @@ class QRPlatba
         $bank = $accountNumber[1];
         $pre = 0;
         $acc = 0;
-        if (strpos($accountNumber[0], '-') === false) {
+        if (false === mb_strpos($accountNumber[0], '-')) {
             $acc = $accountNumber[0];
         } else {
             list($pre, $acc) = explode('-', $accountNumber[0]);
         }
 
-        $accountPart = sprintf("%06d%010d", $pre, $acc);
-        $iban = 'CZ00' . $bank . $accountPart;
+        $accountPart = sprintf('%06d%010d', $pre, $acc);
+        $iban = 'CZ00'.$bank.$accountPart;
 
-        $alfa = "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z";
-        $alfa = explode(" ", $alfa);
-        for ($i = 1; $i < 27; $i++) {
+        $alfa = 'A B C D E F G H I J K L M N O P Q R S T U V W X Y Z';
+        $alfa = explode(' ', $alfa);
+        for ($i = 1; $i < 27; ++$i) {
             $alfa_replace[] = $i + 9;
         }
-        $controlegetal = str_replace($alfa, $alfa_replace, substr($iban, 4, strlen($iban) - 4) . substr($iban, 0, 2) . "00");
-        $controlegetal = 98 - (int)bcmod($controlegetal, 97);
-        $iban = sprintf("CZ%02d%04d%06d%010d", $controlegetal, $bank, $pre, $acc);
+        $controlegetal = str_replace($alfa, $alfa_replace, mb_substr($iban, 4, mb_strlen($iban) - 4).mb_substr($iban, 0, 2).'00');
+        $controlegetal = 98 - (int) bcmod($controlegetal, 97);
+        $iban = sprintf('CZ%02d%04d%06d%010d', $controlegetal, $bank, $pre, $acc);
 
         return $iban;
     }
@@ -306,12 +491,13 @@ class QRPlatba
      * Odstranění diaktitiky.
      *
      * @param $string
+     *
      * @return mixed
      */
     private function stripDiacritics($string)
     {
         $string = str_replace(
-            array(
+            [
                 'ě',
                 'š',
                 'č',
@@ -345,8 +531,8 @@ class QRPlatba
                 'ů',
                 'ű',
                 'ü',
-            ),
-            array(
+            ],
+            [
                 'e',
                 's',
                 'c',
@@ -380,11 +566,11 @@ class QRPlatba
                 'u',
                 'u',
                 'u',
-            ),
+            ],
             $string
         );
         $string = str_replace(
-            array(
+            [
                 'Ě',
                 'Š',
                 'Č',
@@ -406,8 +592,8 @@ class QRPlatba
                 'Ë',
                 'Ö',
                 'Ü',
-            ),
-            array(
+            ],
+            [
                 'E',
                 'S',
                 'C',
@@ -429,11 +615,10 @@ class QRPlatba
                 'E',
                 'O',
                 'U',
-            ),
+            ],
             $string
         );
 
         return $string;
     }
-
 }
