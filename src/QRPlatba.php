@@ -197,24 +197,42 @@ class QRPlatba
      * @var array
      */
     private $keys = [
-        'ACC' => null, // Max. 46 - znaků IBAN, BIC Identifikace protistrany !povinny
-        'ALT-ACC' => null, // Max. 93 - znaků Seznam alternativnich uctu. odddeleny carkou,
-        'AM' => null, //Max. 10 znaků - Desetinné číslo Výše částky platby.
-        'CC' => 'CZK', // Právě 3 znaky - Měna platby.
-        'DT' => null, // Právě 8 znaků - Datum splatnosti YYYYMMDD.
-        'MSG' => null, // Max. 60 znaků - Zpráva pro příjemce.
-        'X-VS' => null, // Max. 10 znaků - Celé číslo - Variabilní symbol
-        'X-SS' => null, // Max. 10 znaků - Celé číslo - Specifický symbol
-        'X-KS' => null, // Max. 10 znaků - Celé číslo - Konstantní symbol
-        'RF' => null, // Max. 16 znaků - Identifikátor platby pro příjemce.
-        'RN' => null, // Max. 35 znaků - Jméno příjemce.
-        'PT' => null, // Právě 3 znaky - Typ platby.
-        'CRC32' => null, // Právě 8 znaků - Kontrolní součet - HEX.
-        'NT' => null, // Právě 1 znak P|E - Identifikace kanálu pro zaslání notifikace výstavci platby.
-        'NTA' => null, //Max. 320 znaků - Telefonní číslo v mezinárodním nebo lokálním vyjádření nebo E-mailová adresa
-        'X-PER' => null, // Max. 2 znaky -  Celé číslo - Počet dní, po které se má provádět pokus o opětovné provedení neúspěšné platby
-        'X-ID' => null, // Max. 20 znaků. -  Identifikátor platby na straně příkazce. Jedná se o interní ID, jehož použití a interpretace závisí na bance příkazce.
-        'X-URL' => null, // Max. 140 znaků. -  URL, které je možno využít pro vlastní potřebu
+        'ACC' => null,
+        // Max. 46 - znaků IBAN, BIC Identifikace protistrany !povinny
+        'ALT-ACC' => null,
+        // Max. 93 - znaků Seznam alternativnich uctu. odddeleny carkou,
+        'AM' => null,
+        //Max. 10 znaků - Desetinné číslo Výše částky platby.
+        'CC' => 'CZK',
+        // Právě 3 znaky - Měna platby.
+        'DT' => null,
+        // Právě 8 znaků - Datum splatnosti YYYYMMDD.
+        'MSG' => null,
+        // Max. 60 znaků - Zpráva pro příjemce.
+        'X-VS' => null,
+        // Max. 10 znaků - Celé číslo - Variabilní symbol
+        'X-SS' => null,
+        // Max. 10 znaků - Celé číslo - Specifický symbol
+        'X-KS' => null,
+        // Max. 10 znaků - Celé číslo - Konstantní symbol
+        'RF' => null,
+        // Max. 16 znaků - Identifikátor platby pro příjemce.
+        'RN' => null,
+        // Max. 35 znaků - Jméno příjemce.
+        'PT' => null,
+        // Právě 3 znaky - Typ platby.
+        'CRC32' => null,
+        // Právě 8 znaků - Kontrolní součet - HEX.
+        'NT' => null,
+        // Právě 1 znak P|E - Identifikace kanálu pro zaslání notifikace výstavci platby.
+        'NTA' => null,
+        //Max. 320 znaků - Telefonní číslo v mezinárodním nebo lokálním vyjádření nebo E-mailová adresa
+        'X-PER' => null,
+        // Max. 2 znaky -  Celé číslo - Počet dní, po které se má provádět pokus o opětovné provedení neúspěšné platby
+        'X-ID' => null,
+        // Max. 20 znaků. -  Identifikátor platby na straně příkazce. Jedná se o interní ID, jehož použití a interpretace závisí na bance příkazce.
+        'X-URL' => null,
+        // Max. 140 znaků. -  URL, které je možno využít pro vlastní potřebu
     ];
 
     /**
@@ -237,9 +255,6 @@ class QRPlatba
             $this->setVariableSymbol($variable);
         }
         if ($currency) {
-            if (!in_array($currency, $this->currencies, true)) {
-                throw new \InvalidArgumentException(sprintf('Currency %s is not supported.', $currency));
-            }
             $this->setCurrency($currency);
         }
     }
@@ -368,6 +383,10 @@ class QRPlatba
      */
     public function setCurrency($cc)
     {
+        if (!in_array($cc, self::$currencies, true)) {
+            throw new \InvalidArgumentException(sprintf('Currency %s is not supported.', $cc));
+        }
+
         $this->keys['CC'] = $cc;
 
         return $this;
@@ -480,7 +499,11 @@ class QRPlatba
         for ($i = 1; $i < 27; ++$i) {
             $alfa_replace[] = $i + 9;
         }
-        $controlegetal = str_replace($alfa, $alfa_replace, mb_substr($iban, 4, mb_strlen($iban) - 4).mb_substr($iban, 0, 2).'00');
+        $controlegetal = str_replace(
+            $alfa,
+            $alfa_replace,
+            mb_substr($iban, 4, mb_strlen($iban) - 4).mb_substr($iban, 0, 2).'00'
+        );
         $controlegetal = 98 - (int) bcmod($controlegetal, 97);
         $iban = sprintf('CZ%02d%04d%06d%010d', $controlegetal, $bank, $pre, $acc);
 

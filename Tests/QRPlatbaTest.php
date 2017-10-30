@@ -16,12 +16,15 @@ use Defr\QRPlatba\QRPlatba;
  */
 class QRPlatbaTest extends PHPUnit_Framework_TestCase
 {
-//    public function testFakeCurrencyString()
-//    {
-//        QRPlatba::create('12-3456789012/0100', '1234.56', '2016001234')
-//            ->setMessage('Düakrítičs')
-//            ->setCurrency('FAKE');
-//    }
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testFakeCurrencyString()
+    {
+        QRPlatba::create('12-3456789012/0100', '1234.56', '2016001234')
+            ->setMessage('Düakrítičs')
+            ->setCurrency('FAKE');
+    }
 
     public function testCzkString()
     {
@@ -30,7 +33,7 @@ class QRPlatbaTest extends PHPUnit_Framework_TestCase
 
         $this->assertSame(
             'SPD*1.0*ACC:CZ0301000000123456789012*AM:1234.56*CC:CZK*MSG:Duakritics*X-VS:2016001234',
-            $string
+            $string->__toString()
         );
 
         $string = QRPlatba::create('12-3456789012/0100', '1234.56', '2016001234')
@@ -39,7 +42,7 @@ class QRPlatbaTest extends PHPUnit_Framework_TestCase
 
         $this->assertSame(
             'SPD*1.0*ACC:CZ0301000000123456789012*AM:1234.56*CC:CZK*MSG:Duakritics*X-VS:2016001234',
-            $string
+            $string->__toString()
         );
     }
 
@@ -47,12 +50,11 @@ class QRPlatbaTest extends PHPUnit_Framework_TestCase
     {
         $string = QRPlatba::create('12-3456789012/0100', '1234.56', '2016001234')
             ->setMessage('Düakrítičs')
-            ->setCurrency('EUR')
-        ;
+            ->setCurrency('EUR');
 
         $this->assertSame(
             'SPD*1.0*ACC:CZ0301000000123456789012*AM:1234.56*CC:EUR*MSG:Duakritics*X-VS:2016001234',
-            $string
+            $string->__toString()
         );
     }
 
