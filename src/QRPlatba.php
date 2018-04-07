@@ -97,6 +97,7 @@ class QRPlatba
      * @param null $amount
      * @param null $variable
      * @param null $currency
+     * @throws \InvalidArgumentException
      */
     public function __construct($account = null, $amount = null, $variable = null, $currency = null)
     {
@@ -122,6 +123,7 @@ class QRPlatba
      * @param null $variable
      *
      * @return QRPlatba
+     * @throws \InvalidArgumentException
      */
     public static function create($account = null, $amount = null, $variable = null)
     {
@@ -137,7 +139,7 @@ class QRPlatba
      */
     public function setAccount($account)
     {
-        $this->keys['ACC'] = $this->accountToIban($account);
+        $this->keys['ACC'] = self::accountToIban($account);
 
         return $this;
     }
@@ -196,7 +198,7 @@ class QRPlatba
     public function setSpecificSymbol($ss)
     {
         if (mb_strlen($ss) > 10) {
-            throw new QRPlatbaException();
+            throw new QRPlatbaException('Specific symbol is higher than 10 chars');
         }
         $this->keys['X-SS'] = $ss;
 
@@ -235,6 +237,7 @@ class QRPlatba
      * @param $cc
      *
      * @return $this
+     * @throws \InvalidArgumentException
      */
     public function setCurrency($cc)
     {
@@ -270,16 +273,13 @@ class QRPlatba
      *
      * @param bool $htmlTag
      * @param int  $size
-     * @param int  $padding
-     *
-     * @throws \Endroid\QrCode\Exceptions\ImageFunctionUnknownException
      *
      * @return string
      */
-    public function getQRCodeImage($htmlTag = true, $size = 300, $padding = 10)
+    public function getQRCodeImage($htmlTag = true, $size = 300)
     {
-        $qrCode = $this->getQRCodeInstance($size, $padding);
-        $data = $qrCode->getDataUri();
+        $qrCode = $this->getQRCodeInstance($size);
+        $data = $qrCode->writeDataUri();
 
         return $htmlTag
             ? sprintf('<img src="%s" alt="QR Platba">', $data)
@@ -290,18 +290,17 @@ class QRPlatba
      * Uložení QR kódu do souboru.
      *
      * @param null|string $filename File name of the QR Code
-     * @param null|string $format   Format of the file (png, jpeg, jpg, gif, wbmp)
-     * @param int         $size
-     * @param int         $padding
-     *
-     * @throws \Endroid\QrCode\Exceptions\ImageFunctionUnknownException
+     * @param null|string $format Format of the file (png, jpeg, jpg, gif, wbmp)
+     * @param int $size
      *
      * @return QRPlatba
+     * @throws \Endroid\QrCode\Exception\UnsupportedExtensionException
      */
-    public function saveQRCodeImage($filename = null, $format = 'png', $size = 300, $padding = 10)
+    public function saveQRCodeImage($filename = null, $format = 'png', $size = 300)
     {
-        $qrCode = $this->getQRCodeInstance($size, $padding);
-        $qrCode->render($filename, $format);
+        $qrCode = $this->getQRCodeInstance($size);
+        $qrCode->setWriterByExtension($format);
+        $qrCode->writeFile($filename);
 
         return $this;
     }
@@ -310,17 +309,15 @@ class QRPlatba
      * Instance třídy QrCode pro libovolné úpravy (barevnost, atd.).
      *
      * @param int $size
-     * @param int $padding
      *
      * @return QrCode
      */
-    public function getQRCodeInstance($size = 300, $padding = 10)
+    public function getQRCodeInstance($size = 300)
     {
         $qrCode = new QrCode();
         $qrCode
             ->setText((string) $this)
             ->setSize($size)
-            ->setPadding($padding)
             ->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0])
             ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0]);
 
@@ -351,6 +348,7 @@ class QRPlatba
 
         $alfa = 'A B C D E F G H I J K L M N O P Q R S T U V W X Y Z';
         $alfa = explode(' ', $alfa);
+        $alfa_replace = [];
         for ($i = 1; $i < 27; ++$i) {
             $alfa_replace[] = $i + 9;
         }
@@ -379,22 +377,15 @@ class QRPlatba
                 'ě', 'š', 'č', 'ř', 'ž', 'ý', 'á', 'í', 'é', 'ú', 'ů',
                 'ó', 'ť', 'ď', 'ľ', 'ň', 'ŕ', 'â', 'ă', 'ä', 'ĺ', 'ć',
                 'ç', 'ę', 'ë', 'î', 'ń', 'ô', 'ő', 'ö', 'ů', 'ű', 'ü',
+                'Ě', 'Š', 'Č', 'Ř', 'Ž', 'Ý', 'Á', 'Í', 'É', 'Ú', 'Ů',
+                'Ó', 'Ť', 'Ď', 'Ľ', 'Ň', 'Ä', 'Ć', 'Ë', 'Ö', 'Ü'
             ],
             [
                 'e', 's', 'c', 'r', 'z', 'y', 'a', 'i', 'e', 'u', 'u',
                 'o', 't', 'd', 'l', 'n', 'a', 'a', 'a', 'a', 'a', 'a',
                 'c', 'e', 'e', 'i', 'n', 'o', 'o', 'o', 'u', 'u', 'u',
-            ],
-            $string
-        );
-        $string = str_replace(
-            [
-                'Ě', 'Š', 'Č', 'Ř', 'Ž', 'Ý', 'Á', 'Í', 'É', 'Ú', 'Ů',
-                'Ó', 'Ť', 'Ď', 'Ľ', 'Ň', 'Ä', 'Ć', 'Ë', 'Ö', 'Ü',
-            ],
-            [
                 'E', 'S', 'C', 'R', 'Z', 'Y', 'A', 'I', 'E', 'U', 'U',
-                'O', 'T', 'D', 'L', 'N', 'A', 'C', 'E', 'O', 'U',
+                'O', 'T', 'D', 'L', 'N', 'A', 'C', 'E', 'O', 'U'
             ],
             $string
         );
