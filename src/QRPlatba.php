@@ -346,7 +346,7 @@ class QRPlatba
             list($pre, $acc) = explode('-', $accountNumber[0]);
         }
 
-        $accountPart = sprintf('%06d%010d', $pre, $acc);
+        $accountPart = sprintf('%06d%010s', $pre, $acc);
         $iban = 'CZ00'.$bank.$accountPart;
 
         $alfa = 'A B C D E F G H I J K L M N O P Q R S T U V W X Y Z';
@@ -360,7 +360,7 @@ class QRPlatba
             mb_substr($iban, 4, mb_strlen($iban) - 4).mb_substr($iban, 0, 2).'00'
         );
         $controlegetal = 98 - (int) bcmod($controlegetal, 97);
-        $iban = sprintf('CZ%02d%04d%06d%010d', $controlegetal, $bank, $pre, $acc);
+        $iban = sprintf('CZ%02d%04d%06d%010s', $controlegetal, $bank, $pre, $acc);
 
         return $iban;
     }
