@@ -66,4 +66,15 @@ class QRPlatbaTest extends PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('Endroid\\QrCode\\QrCode', $qrPlatba);
     }
+
+    public function testRecipientName()
+    {
+	    $string = QRPlatba::create('12-3456789012/0100', '1234.56', '2016001234')
+		    ->setRecipientName('Düakrítičs');
+
+	    $this->assertSame(
+		    'SPD*1.0*ACC:CZ0301000000123456789012*AM:1234.56*CC:CZK*X-VS:2016001234*RN:Duakritics',
+		    $string->__toString()
+	    );
+    }
 }
