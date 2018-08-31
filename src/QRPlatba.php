@@ -219,6 +219,20 @@ class QRPlatba
         return $this;
     }
 
+	/**
+	 * Nastavení jména příjemce. Z řetězce bude odstraněna diaktirika.
+	 *
+	 * @param $name
+	 *
+	 * @return $this
+	 */
+	public function setRecipientName($name)
+	{
+		$this->keys['RN'] = mb_substr($this->stripDiacritics($name), 0, 35);
+
+		return $this;
+	}
+
     /**
      * Nastavení data úhrady.
      *
