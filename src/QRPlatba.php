@@ -220,7 +220,7 @@ class QRPlatba
     }
 
 	/**
-	 * Nastavení jmena příjemce. Z řetězce bude odstraněna diaktirika.
+	 * Nastavení jména příjemce. Z řetězce bude odstraněna diaktirika.
 	 *
 	 * @param $name
 	 *
