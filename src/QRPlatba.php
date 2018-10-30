@@ -371,7 +371,7 @@ class QRPlatba
             $alfa_replace,
             mb_substr($iban, 4, mb_strlen($iban) - 4).mb_substr($iban, 0, 2).'00'
         );
-        $controlegetal = 98 - (int) bcmod($controlegetal, 97);
+        $controlegetal = 98 - (int) bcmod((float)$controlegetal, 97);
         $iban = sprintf('CZ%02d%04d%06d%010s', $controlegetal, $bank, $pre, $acc);
 
         return $iban;
