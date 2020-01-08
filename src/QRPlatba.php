@@ -144,6 +144,20 @@ class QRPlatba
         return $this;
     }
 
+	/**
+	 * Nastavení alternativního čísla účtu ve formátu 12-3456789012/0100.
+	 *
+	 * @param $account
+	 *
+	 * @return $this
+	 */
+	public function addAlternativeAccount($account)
+	{
+		$this->keys['ALT-ACC'] .= ($this->keys['ALT-ACC'] ? ',' : '') . self::accountToIban($account);
+
+		return $this;
+	}
+
     /**
      * Nastavení částky.
      *
