@@ -14,7 +14,7 @@ use Defr\QRPlatba\QRPlatba;
 /**
  * Class QRPlatbaTest.
  */
-class QRPlatbaTest extends PHPUnit_Framework_TestCase
+class QRPlatbaTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @expectedException \InvalidArgumentException

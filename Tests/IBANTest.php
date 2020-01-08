@@ -14,7 +14,7 @@ use Defr\QRPlatba\QRPlatba;
 /**
  * Class QRPlatbaTest.
  */
-class IBANTest extends PHPUnit_Framework_TestCase
+class IBANTest extends \PHPUnit\Framework\TestCase
 {
 
     public function testAccountHigherThanMaxInt()
