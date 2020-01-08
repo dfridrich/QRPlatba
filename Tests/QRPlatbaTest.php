@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * Class QRPlatbaTest.
  */
-class QRPlatbaTest extends TestCase
+class QRPlatbaTest extends PHPUnit_Framework_TestCase
 {
     public function testFakeCurrencyString()
     {
