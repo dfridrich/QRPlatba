@@ -1,5 +1,5 @@
 {
-    "name": "dfridrich/qr-platba",
+    "name": "dtforce/qr-platba",
     "type": "library",
     "description": "Generování QR plateb v PHP.",
     "keywords": [
@@ -7,7 +7,7 @@
         "qr",
         "platba"
     ],
-    "homepage": "https://github.com/dfridrich/QRPlatba",
+    "homepage": "https://github.com/DTForce/QRPlatba",
     "license": "MIT",
     "authors": [
         {
