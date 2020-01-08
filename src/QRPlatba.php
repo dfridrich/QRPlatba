@@ -182,7 +182,7 @@ class QRPlatba
      */
     public function setConstantSymbol($cs)
     {
-        $this->keys['X-CS'] = $cs;
+        $this->keys['X-KS'] = $cs;
 
         return $this;
     }
