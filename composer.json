@@ -1,5 +1,5 @@
 {
-    "name": "dtforce/qr-platba",
+    "name": "ket4z/qr-platba",
     "type": "library",
     "description": "Generování QR plateb v PHP.",
     "keywords": [
