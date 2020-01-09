@@ -16,11 +16,11 @@ use Defr\QRPlatba\QRPlatba;
  */
 class QRPlatbaTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @expectedException \InvalidArgumentException
-     */
+
     public function testFakeCurrencyString()
     {
+		$this->expectException(\InvalidArgumentException::class);
+
         QRPlatba::create('12-3456789012/0100', '1234.56', '2016001234')
             ->setMessage('Düakrítičs')
             ->setCurrency('FAKE');
