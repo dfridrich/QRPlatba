@@ -13,6 +13,8 @@ namespace Defr\QRPlatba;
 
 use DateTime;
 use Endroid\QrCode\QrCode;
+use Iban\Validation\Iban;
+use Iban\Validation\Validator;
 
 /**
  * Knihovna pro generování QR plateb v PHP.
@@ -99,6 +101,7 @@ class QRPlatba
      * @param null $variable
      * @param null $currency
      * @throws \InvalidArgumentException
+	 * @throws QRPlatbaException
      */
     public function __construct($account = null, $amount = null, $variable = null, $currency = null)
     {
@@ -125,39 +128,81 @@ class QRPlatba
      *
      * @return QRPlatba
      * @throws \InvalidArgumentException
-     */
+	 * @throws QRPlatbaException
+	 */
     public static function create($account = null, $amount = null, $variable = null)
     {
         return new self($account, $amount, $variable);
     }
 
     /**
-     * Nastavení čísla účtu ve formátu 12-3456789012/0100.
+     * Nastavení čísla účtu ve formátu 12-3456789012/0100 nebo IBAN
      *
      * @param $account
-     *
+	 * @throws QRPlatbaException
      * @return $this
      */
     public function setAccount($account)
     {
-        $this->keys['ACC'] = self::accountToIban($account);
+		$this->keys['ACC'] = $this->prepareIban($account);
 
         return $this;
     }
 
+
 	/**
-	 * Nastavení alternativního čísla účtu ve formátu 12-3456789012/0100.
+	 * Nastavení alternativního čísla účtu ve formátu 12-3456789012/0100 nebo IBAN
 	 *
 	 * @param $account
-	 *
+	 * @throws QRPlatbaException
 	 * @return $this
 	 */
 	public function addAlternativeAccount($account)
 	{
-		$this->keys['ALT-ACC'] .= ($this->keys['ALT-ACC'] ? ',' : '') . self::accountToIban($account);
+		$this->keys['ALT-ACC'] .= ($this->keys['ALT-ACC'] ? ',' : '') . $this->prepareIban($account);
 
 		return $this;
 	}
+
+	/**
+	 * Přímé nastavení účtu v IBAN formátu
+	 *
+	 * @param string $iban
+	 * @throws QRPlatbaException
+	 * @return $this
+	 */
+	public function setIBAN($iban)
+	{
+		$iban = new Iban($iban);
+		$validator = new Validator();
+
+		if (!$validator->validate($iban)) {
+			foreach ($validator->getViolations() as $violation) {
+				throw new QRPlatbaException($violation);
+			}
+		}
+
+		$this->keys['ACC'] = $iban->getNormalizedIban();
+	}
+
+
+	/**
+	 * Rozhodne zda-li se jedna o cislo uctu nebo IBAN a vrati vzdy spravne pripraveny IBAN
+	 * @param $account
+	 * @throws QRPlatbaException
+	 * @return string
+	 */
+	public function prepareIban(string $account): string
+	{
+		$ibanTest = new Iban($account);
+		$validator = new Validator();
+		if ($validator->validate($ibanTest)) {
+			return $ibanTest->getNormalizedIban();
+		}
+
+		return self::accountToIban($account);
+	}
+
 
     /**
      * Nastavení částky.
@@ -356,12 +401,15 @@ class QRPlatba
      * Převedení čísla účtu na formát IBAN.
      *
      * @param $accountNumber
-     *
+     * @throws QRPlatbaException
      * @return string
      */
     public static function accountToIban($accountNumber)
     {
         $accountNumber = explode('/', $accountNumber);
+        if(count($accountNumber) !== 2) {
+        	throw new QRPlatbaException('Sorry, but this is not bank account');
+        }
         $bank = $accountNumber[1];
         $pre = 0;
         $acc = 0;

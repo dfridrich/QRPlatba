@@ -1,5 +1,7 @@
 <?php
 
+require __DIR__ .  DIRECTORY_SEPARATOR . 'bootstrap.php';
+
 /*
  * This file is part of the library "QRPlatba".
  *
@@ -109,4 +111,14 @@ class QRPlatbaTest extends PHPUnit_Framework_TestCase
 			$string->__toString()
 		);
 	}
+
+
+	public function testInvalidAccount()
+	{
+		$this->expectException(\Defr\QRPlatba\QRPlatbaException::class);
+
+		$qrplatba = new Defr\QRPlatba\QRPlatba();
+		$qrplatba->prepareIban('12345679870800');
+	}
+
 }
