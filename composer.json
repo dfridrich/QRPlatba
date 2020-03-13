@@ -22,7 +22,10 @@
     "autoload": {
         "psr-4": {
             "Defr\\QRPlatba\\": "src/"
-        }
+        },
+        "files": [
+            "src/bcmod.php"
+        ]
     },
     "require-dev": {
         "phpunit/phpunit": "4.8.36"
