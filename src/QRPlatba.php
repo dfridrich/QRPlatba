@@ -9,7 +9,7 @@
  * please view LICENSE.
  */
 
-namespace Defr\QRPlatba;
+namespace Swejzi\QRPlatba;
 
 use Endroid\QrCode\QrCode;
 

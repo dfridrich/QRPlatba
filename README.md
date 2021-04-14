@@ -34,7 +34,7 @@ Podporuje PHP 5.6 až 8.0.
 
 require __DIR__ . '/vendor/autoload.php';
 
-use Defr\QRPlatba\QRPlatba;
+use Swejzi\QRPlatba\QRPlatba;
 
 $qrPlatba = new QRPlatba();
 

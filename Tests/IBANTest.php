@@ -9,7 +9,7 @@
  * please view LICENSE.
  */
 
-use Defr\QRPlatba\QRPlatba;
+use Swejzi\QRPlatba\QRPlatba;
 
 /**
  * Class QRPlatbaTest.

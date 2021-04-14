@@ -21,7 +21,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Defr\\QRPlatba\\": "src/"
+            "Swejzi\\QRPlatba\\": "src/"
         }
     },
     "require-dev": {
