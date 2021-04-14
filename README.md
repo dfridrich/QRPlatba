@@ -1,9 +1,9 @@
 # QR Platba
 
-[![Latest Stable Version](https://poser.pugx.org/dfridrich/qr-platba/v/stable)](https://packagist.org/packages/dfridrich/qr-platba)
-[![Total Downloads](https://poser.pugx.org/dfridrich/qr-platba/downloads)](https://packagist.org/packages/dfridrich/qr-platba)
-[![Build Status](https://travis-ci.org/dfridrich/QRPlatba.svg)](https://travis-ci.org/dfridrich/QRPlatba)
-[![Coverage Status](https://coveralls.io/repos/github/dfridrich/QRPlatba/badge.svg?branch=master)](https://coveralls.io/github/dfridrich/QRPlatba?branch=master)
+FORK od https://github.com/dfridrich/QRPlatba
+
+[![Latest Stable Version](https://poser.pugx.org/swejzi/qr-platba/v/stable)](https://packagist.org/packages/swejzi/qr-platba)
+[![Total Downloads](https://poser.pugx.org/swejzi/qr-platba/downloads)](https://packagist.org/packages/swejzi/qr-platba)
 
 Knihovna pro generování QR plateb v PHP. QR platba zjednodušuje koncovému uživateli
 provedení příkazu k úhradě, protože obsahuje veškeré potřebné údaje, které stačí jen
@@ -21,7 +21,7 @@ QRPlatbu v současné době podporují tyto banky:
 Air Bank, Česká spořitelna, ČSOB, Equa bank, Era, Fio banka, Komerční banka, mBank, Raiffeisenbank, ZUNO.
 
 
-Podporuje PHP 5.6 až 7.2.
+Podporuje PHP 5.6 až 8.0.
 
 ## Instalace pomocí Composeru
 
