@@ -1,5 +1,5 @@
 {
-    "name": "dfridrich/qr-platba",
+    "name": "swejzi/qr-platba",
     "type": "library",
     "description": "Generování QR plateb v PHP.",
     "keywords": [
@@ -7,7 +7,7 @@
         "qr",
         "platba"
     ],
-    "homepage": "https://github.com/dfridrich/QRPlatba",
+    "homepage": "https://github.com/Swejzi/QRPlatba",
     "license": "MIT",
     "authors": [
         {

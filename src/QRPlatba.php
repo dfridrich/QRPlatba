@@ -175,13 +175,13 @@ class QRPlatba
     /**
      * Nastavení konstatního symbolu.
      *
-     * @param $cs
+     * @param $ks
      *
      * @return $this
      */
-    public function setConstantSymbol($cs)
+    public function setConstantSymbol($ks)
     {
-        $this->keys['X-CS'] = $cs;
+        $this->keys['X-KS'] = $ks;
 
         return $this;
     }
