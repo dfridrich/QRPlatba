@@ -11,7 +11,17 @@
 
 namespace Swejzi\QRPlatba;
 
+use BaconQrCode\Exception\WriterException;
+use BaconQrCode\Writer;
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\BinaryWriter;
+use Endroid\QrCode\Writer\DebugWriter;
+use Endroid\QrCode\Writer\EpsWriter;
+use Endroid\QrCode\Writer\PdfWriter;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\SvgWriter;
 
 /**
  * Knihovna pro generování QR plateb v PHP.
@@ -24,6 +34,13 @@ class QRPlatba
      * Verze QR formátu QR Platby.
      */
     const VERSION = '1.0';
+
+    const FORMAT_BINARY = 'binary';
+    const FORMAT_DEBUG = 'debug';
+    const FORMAT_ESP = 'esp';
+    const FORMAT_PDF = 'pdf';
+    const FORMAT_PNG = 'png';
+    const FORMAT_SVG = 'svg';
 
     /**
      * @var array
@@ -191,9 +208,9 @@ class QRPlatba
      *
      * @param $ss
      *
+     * @return $this
      * @throws QRPlatbaException
      *
-     * @return $this
      */
     public function setSpecificSymbol($ss)
     {
@@ -219,19 +236,19 @@ class QRPlatba
         return $this;
     }
 
-	/**
-	 * Nastavení jména příjemce. Z řetězce bude odstraněna diaktirika.
-	 *
-	 * @param $name
-	 *
-	 * @return $this
-	 */
-	public function setRecipientName($name)
-	{
-		$this->keys['RN'] = mb_substr($this->stripDiacritics($name), 0, 35);
+    /**
+     * Nastavení jména příjemce. Z řetězce bude odstraněna diaktirika.
+     *
+     * @param $name
+     *
+     * @return $this
+     */
+    public function setRecipientName($name)
+    {
+        $this->keys['RN'] = mb_substr($this->stripDiacritics($name), 0, 35);
 
-		return $this;
-	}
+        return $this;
+    }
 
     /**
      * Nastavení data úhrady.
@@ -265,6 +282,32 @@ class QRPlatba
     }
 
     /**
+     * @param string $format
+     *
+     * @return \Endroid\QrCode\Writer\WriterInterface
+     * @throws \BaconQrCode\Exception\WriterException
+     */
+    private function getWriterByFormat($format)
+    {
+        switch ($format) {
+            case self::FORMAT_BINARY:
+                return new BinaryWriter();
+            case self::FORMAT_DEBUG:
+                return new DebugWriter();
+            case self::FORMAT_ESP:
+                return new EpsWriter();
+            case self::FORMAT_PDF:
+                return new PdfWriter();
+            case self::FORMAT_PNG:
+                return new PngWriter();
+            case self::FORMAT_SVG:
+                return new SvgWriter();
+        }
+
+        throw new WriterException('Writer is not defined.');
+    }
+
+    /**
      * Metoda vrátí QR Platbu jako textový řetězec.
      *
      * @return string
@@ -276,7 +319,7 @@ class QRPlatba
             if (null === $value) {
                 continue;
             }
-            $chunks[] = $key.':'.$value;
+            $chunks[] = $key . ':' . $value;
         }
 
         return implode('*', $chunks);
@@ -286,14 +329,14 @@ class QRPlatba
      * Metoda vrátí QR kód jako HTML tag, případně jako data-uri.
      *
      * @param bool $htmlTag
-     * @param int  $size
+     * @param int $size
      *
      * @return string
      */
-    public function getQRCodeImage($htmlTag = true, $size = 300)
+    public function getQRCodeImage($htmlTag = true, $size = 300, $margin = 0, $format = self::FORMAT_PNG)
     {
-        $qrCode = $this->getQRCodeInstance($size);
-        $data = $qrCode->writeDataUri();
+        $qrCodeResult = $this->getQRCodeResult($size, $margin, $format);
+        $data = $qrCodeResult->getDataUri();
 
         return $htmlTag
             ? sprintf('<img src="%s" alt="QR Platba">', $data)
@@ -308,13 +351,12 @@ class QRPlatba
      * @param int $size
      *
      * @return QRPlatba
-     * @throws \Endroid\QrCode\Exception\UnsupportedExtensionException
+     * @throws \BaconQrCode\Exception\WriterException
      */
-    public function saveQRCodeImage($filename = null, $format = 'png', $size = 300)
+    public function saveQRCodeImage($filename = null, $size = 300, $margin = 0, $format = self::FORMAT_PNG)
     {
-        $qrCode = $this->getQRCodeInstance($size);
-        $qrCode->setWriterByExtension($format);
-        $qrCode->writeFile($filename);
+        $qrCodeResult = $this->getQRCodeResult($size, $margin, $format);
+        $qrCodeResult->saveToFile($filename);
 
         return $this;
     }
@@ -323,18 +365,22 @@ class QRPlatba
      * Instance třídy QrCode pro libovolné úpravy (barevnost, atd.).
      *
      * @param int $size
+     * @param int $margin
      *
-     * @return QrCode
+     * @return \Endroid\QrCode\Writer\Result\ResultInterface
+     * @throws \BaconQrCode\Exception\WriterException
      */
-    public function getQRCodeInstance($size = 300)
+    public function getQRCodeResult($size = 300, $margin = 0, $format = self::FORMAT_PNG)
     {
-        $qrCode = new QrCode();
-        $qrCode->setText((string) $this);
-        $qrCode->setSize($size);
-        $qrCode->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0]);
-        $qrCode->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0]);
+        $qrCodeBuilder = Builder::create()
+            ->data((string)$this)
+            ->size($size)
+            ->margin($margin)
+            ->foregroundColor(new Color(0, 0, 0, 0))
+            ->backgroundColor(new Color(255, 255, 255, 0))
+            ->writer($this->getWriterByFormat($format));
 
-        return $qrCode;
+        return $qrCodeBuilder->build();
     }
 
     /**
@@ -353,11 +399,11 @@ class QRPlatba
         if (false === mb_strpos($accountNumber[0], '-')) {
             $acc = $accountNumber[0];
         } else {
-            list($pre, $acc) = explode('-', $accountNumber[0]);
+            [$pre, $acc] = explode('-', $accountNumber[0]);
         }
 
         $accountPart = sprintf('%06d%010s', $pre, $acc);
-        $iban = 'CZ00'.$bank.$accountPart;
+        $iban = 'CZ00' . $bank . $accountPart;
 
         $alfa = 'A B C D E F G H I J K L M N O P Q R S T U V W X Y Z';
         $alfa = explode(' ', $alfa);
@@ -368,9 +414,9 @@ class QRPlatba
         $controlegetal = str_replace(
             $alfa,
             $alfa_replace,
-            mb_substr($iban, 4, mb_strlen($iban) - 4).mb_substr($iban, 0, 2).'00'
+            mb_substr($iban, 4, mb_strlen($iban) - 4) . mb_substr($iban, 0, 2) . '00'
         );
-        $controlegetal = 98 - (int) bcmod($controlegetal, 97);
+        $controlegetal = 98 - (int)bcmod($controlegetal, 97);
         $iban = sprintf('CZ%02d%04d%06d%010s', $controlegetal, $bank, $pre, $acc);
 
         return $iban;
@@ -391,14 +437,14 @@ class QRPlatba
                 'ó', 'ť', 'ď', 'ľ', 'ň', 'ŕ', 'â', 'ă', 'ä', 'ĺ', 'ć',
                 'ç', 'ę', 'ë', 'î', 'ń', 'ô', 'ő', 'ö', 'ů', 'ű', 'ü',
                 'Ě', 'Š', 'Č', 'Ř', 'Ž', 'Ý', 'Á', 'Í', 'É', 'Ú', 'Ů',
-                'Ó', 'Ť', 'Ď', 'Ľ', 'Ň', 'Ä', 'Ć', 'Ë', 'Ö', 'Ü'
+                'Ó', 'Ť', 'Ď', 'Ľ', 'Ň', 'Ä', 'Ć', 'Ë', 'Ö', 'Ü',
             ],
             [
                 'e', 's', 'c', 'r', 'z', 'y', 'a', 'i', 'e', 'u', 'u',
                 'o', 't', 'd', 'l', 'n', 'a', 'a', 'a', 'a', 'a', 'a',
                 'c', 'e', 'e', 'i', 'n', 'o', 'o', 'o', 'u', 'u', 'u',
                 'E', 'S', 'C', 'R', 'Z', 'Y', 'A', 'I', 'E', 'U', 'U',
-                'O', 'T', 'D', 'L', 'N', 'A', 'C', 'E', 'O', 'U'
+                'O', 'T', 'D', 'L', 'N', 'A', 'C', 'E', 'O', 'U',
             ],
             $string
         );

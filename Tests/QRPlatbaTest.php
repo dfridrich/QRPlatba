@@ -58,13 +58,13 @@ class QRPlatbaTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testQrCodeInstante()
+    public function testQrCodeResult()
     {
         $qrPlatba = QRPlatba::create('12-3456789012/0100', 987.60)
             ->setMessage('QR platba je parádní!')
-            ->getQRCodeInstance();
+            ->getQRCodeResult();
 
-        $this->assertInstanceOf('Endroid\\QrCode\\QrCode', $qrPlatba);
+        $this->assertInstanceOf('Endroid\\QrCode\\Writer\\Result\\ResultInterface', $qrPlatba);
     }
 
     public function testRecipientName()
