@@ -329,11 +329,10 @@ class QRPlatba
     public function getQRCodeInstance($size = 300)
     {
         $qrCode = new QrCode();
-        $qrCode
-            ->setText((string) $this)
-            ->setSize($size)
-            ->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0])
-            ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0]);
+        $qrCode->setText((string) $this);
+        $qrCode->setSize($size);
+        $qrCode->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0]);
+        $qrCode->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0]);
 
         return $qrCode;
     }
