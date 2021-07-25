@@ -4,6 +4,8 @@ FORK od https://github.com/dfridrich/QRPlatba
 
 [![Latest Stable Version](https://poser.pugx.org/swejzi/qr-platba/v/stable)](https://packagist.org/packages/swejzi/qr-platba)
 [![Total Downloads](https://poser.pugx.org/swejzi/qr-platba/downloads)](https://packagist.org/packages/swejzi/qr-platba)
+[![Build Status](https://travis-ci.com/Swejzi/QRPlatba.svg)](https://travis-ci.com/Swejzi/QRPlatba)
+[![Coverage Status](https://coveralls.io/repos/github/Swejzi/QRPlatba/badge.svg)](https://coveralls.io/github/Swejzi/QRPlatba)
 
 Knihovna pro generování QR plateb v PHP. QR platba zjednodušuje koncovému uživateli
 provedení příkazu k úhradě, protože obsahuje veškeré potřebné údaje, které stačí jen
@@ -21,11 +23,11 @@ QRPlatbu v současné době podporují tyto banky:
 Air Bank, Česká spořitelna, ČSOB, Equa bank, Era, Fio banka, Komerční banka, mBank, Raiffeisenbank, ZUNO.
 
 
-Podporuje PHP 5.6 až 8.0.
+Podporuje PHP od 7.3 až 8.0.
 
 ## Instalace pomocí Composeru
 
-`composer require dfridrich/qr-platba`
+`composer require swejzi/qr-platba`
 
 ## Příklad
 
@@ -54,6 +56,8 @@ echo $qrPlatba->getQRCodeImage(); // Zobrazí <img> tag s kódem, viz níže
 Lze použít i jednodušší zápis:
 
 ```php
+use Swejzi\QRPlatba\QRPlatba;
+
 echo QRPlatba::create('12-3456789012/0100', 987.60)
     ->setMessage('QR platba je parádní!')
     ->getQRCodeImage();

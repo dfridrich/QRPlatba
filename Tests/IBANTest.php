@@ -3,7 +3,7 @@
 /*
  * This file is part of the library "QRPlatba".
  *
- * (c) Dennis Fridrich <fridrich.dennis@gmail.com>
+ * (c) Swejzi
  *
  * For the full copyright and license information,
  * please view LICENSE.
