@@ -12,16 +12,18 @@
 namespace Swejzi\QRPlatba;
 
 use BaconQrCode\Exception\WriterException;
-use BaconQrCode\Writer;
+use DateTime;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Color\Color;
-use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\BinaryWriter;
 use Endroid\QrCode\Writer\DebugWriter;
 use Endroid\QrCode\Writer\EpsWriter;
 use Endroid\QrCode\Writer\PdfWriter;
 use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\Result\ResultInterface;
 use Endroid\QrCode\Writer\SvgWriter;
+use Endroid\QrCode\Writer\WriterInterface;
+use InvalidArgumentException;
 
 /**
  * Knihovna pro generování QR plateb v PHP.
@@ -33,14 +35,14 @@ class QRPlatba
     /**
      * Verze QR formátu QR Platby.
      */
-    const VERSION = '1.0';
+    public const VERSION = '1.1';
 
-    const FORMAT_BINARY = 'binary';
-    const FORMAT_DEBUG = 'debug';
-    const FORMAT_ESP = 'esp';
-    const FORMAT_PDF = 'pdf';
-    const FORMAT_PNG = 'png';
-    const FORMAT_SVG = 'svg';
+    public const FORMAT_BINARY = 'binary';
+    public const FORMAT_DEBUG = 'debug';
+    public const FORMAT_ESP = 'esp';
+    public const FORMAT_PDF = 'pdf';
+    public const FORMAT_PNG = 'png';
+    public const FORMAT_SVG = 'svg';
 
     /**
      * @var array
@@ -110,13 +112,13 @@ class QRPlatba
     /**
      * Kontruktor nové platby.
      *
-     * @param null $account
-     * @param null $amount
-     * @param null $variable
-     * @param null $currency
+     * @param null|string $account
+     * @param null|string $amount
+     * @param null|string $variable
+     * @param null|string $currency
      * @throws \InvalidArgumentException
      */
-    public function __construct($account = null, $amount = null, $variable = null, $currency = null)
+    public function __construct(?string $account = null, ?string $amount = null, ?string $variable = null, ?string $currency = null)
     {
         if ($account) {
             $this->setAccount($account);
@@ -133,28 +135,13 @@ class QRPlatba
     }
 
     /**
-     * Statický konstruktor nové platby.
-     *
-     * @param null $account
-     * @param null $amount
-     * @param null $variable
-     *
-     * @return QRPlatba
-     * @throws \InvalidArgumentException
-     */
-    public static function create($account = null, $amount = null, $variable = null)
-    {
-        return new self($account, $amount, $variable);
-    }
-
-    /**
      * Nastavení čísla účtu ve formátu 12-3456789012/0100.
      *
-     * @param $account
+     * @param string $account
      *
      * @return $this
      */
-    public function setAccount($account)
+    public function setAccount(string $account): self
     {
         $this->keys['ACC'] = self::accountToIban($account);
 
@@ -162,13 +149,50 @@ class QRPlatba
     }
 
     /**
+     * Převedení čísla účtu na formát IBAN.
+     *
+     * @param string $accountNumber
+     *
+     * @return string
+     */
+    public static function accountToIban(string $accountNumber): string
+    {
+        $accountNumberParts = explode('/', $accountNumber);
+        $bank = $accountNumberParts[1];
+        $pre = 0;
+        if (false === mb_strpos($accountNumberParts[0], '-')) {
+            $acc = $accountNumberParts[0];
+        } else {
+            [$pre, $acc] = explode('-', $accountNumberParts[0]);
+        }
+
+        $accountPart = sprintf('%06d%010s', $pre, $acc);
+        $iban = 'CZ00' . $bank . $accountPart;
+
+        $alfa = 'A B C D E F G H I J K L M N O P Q R S T U V W X Y Z';
+        $alfa = explode(' ', $alfa);
+        $alfa_replace = [];
+        for ($i = 1; $i < 27; ++$i) {
+            $alfa_replace[] = $i + 9;
+        }
+        $controlegetal = str_replace(
+            $alfa,
+            $alfa_replace,
+            mb_substr($iban, 4, mb_strlen($iban) - 4) . mb_substr($iban, 0, 2) . '00'
+        );
+        $controlegetal = 98 - (int)bcmod($controlegetal, 97);
+
+        return sprintf('CZ%02d%04d%06d%010s', $controlegetal, $bank, $pre, $acc);
+    }
+
+    /**
      * Nastavení částky.
      *
-     * @param $amount
+     * @param float $amount
      *
      * @return $this
      */
-    public function setAmount($amount)
+    public function setAmount(float $amount): self
     {
         $this->keys['AM'] = sprintf('%.2f', $amount);
 
@@ -178,11 +202,11 @@ class QRPlatba
     /**
      * Nastavení variabilního symbolu.
      *
-     * @param $vs
+     * @param string $vs
      *
      * @return $this
      */
-    public function setVariableSymbol($vs)
+    public function setVariableSymbol(string $vs): self
     {
         $this->keys['X-VS'] = $vs;
 
@@ -190,13 +214,45 @@ class QRPlatba
     }
 
     /**
+     * @param string $cc
+     *
+     * @return $this
+     * @throws InvalidArgumentException
+     */
+    public function setCurrency(string $cc): self
+    {
+        if (!in_array($cc, self::$currencies, true)) {
+            throw new InvalidArgumentException(sprintf('Currency %s is not supported.', $cc));
+        }
+
+        $this->keys['CC'] = $cc;
+
+        return $this;
+    }
+
+    /**
+     * Statický konstruktor nové platby.
+     *
+     * @param null|string $account
+     * @param null|float $amount
+     * @param null|string $variable
+     *
+     * @return QRPlatba
+     * @throws \InvalidArgumentException
+     */
+    public static function create(?string $account = null, ?float $amount = null, ?string $variable = null): self
+    {
+        return new self($account, $amount, $variable);
+    }
+
+    /**
      * Nastavení konstatního symbolu.
      *
-     * @param $ks
+     * @param string $ks
      *
      * @return $this
      */
-    public function setConstantSymbol($ks)
+    public function setConstantSymbol(string $ks): self
     {
         $this->keys['X-KS'] = $ks;
 
@@ -206,13 +262,13 @@ class QRPlatba
     /**
      * Nastavení specifického symbolu.
      *
-     * @param $ss
+     * @param string $ss
      *
      * @return $this
      * @throws QRPlatbaException
      *
      */
-    public function setSpecificSymbol($ss)
+    public function setSpecificSymbol(string $ss): self
     {
         if (mb_strlen($ss) > 10) {
             throw new QRPlatbaException('Specific symbol is higher than 10 chars');
@@ -225,11 +281,11 @@ class QRPlatba
     /**
      * Nastavení zprávy pro příjemce. Z řetězce bude odstraněna diaktirika.
      *
-     * @param $msg
+     * @param string $msg
      *
      * @return $this
      */
-    public function setMessage($msg)
+    public function setMessage(string $msg): self
     {
         $this->keys['MSG'] = mb_substr($this->stripDiacritics($msg), 0, 60);
 
@@ -237,13 +293,41 @@ class QRPlatba
     }
 
     /**
+     * Odstranění diaktitiky.
+     *
+     * @param string $string
+     *
+     * @return string|string[]
+     */
+    private function stripDiacritics(string $string)
+    {
+        return str_replace(
+            [
+                'ě', 'š', 'č', 'ř', 'ž', 'ý', 'á', 'í', 'é', 'ú', 'ů',
+                'ó', 'ť', 'ď', 'ľ', 'ň', 'ŕ', 'â', 'ă', 'ä', 'ĺ', 'ć',
+                'ç', 'ę', 'ë', 'î', 'ń', 'ô', 'ő', 'ö', 'ů', 'ű', 'ü',
+                'Ě', 'Š', 'Č', 'Ř', 'Ž', 'Ý', 'Á', 'Í', 'É', 'Ú', 'Ů',
+                'Ó', 'Ť', 'Ď', 'Ľ', 'Ň', 'Ä', 'Ć', 'Ë', 'Ö', 'Ü',
+            ],
+            [
+                'e', 's', 'c', 'r', 'z', 'y', 'a', 'i', 'e', 'u', 'u',
+                'o', 't', 'd', 'l', 'n', 'a', 'a', 'a', 'a', 'a', 'a',
+                'c', 'e', 'e', 'i', 'n', 'o', 'o', 'o', 'u', 'u', 'u',
+                'E', 'S', 'C', 'R', 'Z', 'Y', 'A', 'I', 'E', 'U', 'U',
+                'O', 'T', 'D', 'L', 'N', 'A', 'C', 'E', 'O', 'U',
+            ],
+            $string
+        );
+    }
+
+    /**
      * Nastavení jména příjemce. Z řetězce bude odstraněna diaktirika.
      *
-     * @param $name
+     * @param string $name
      *
      * @return $this
      */
-    public function setRecipientName($name)
+    public function setRecipientName(string $name): self
     {
         $this->keys['RN'] = mb_substr($this->stripDiacritics($name), 0, 35);
 
@@ -253,11 +337,11 @@ class QRPlatba
     /**
      * Nastavení data úhrady.
      *
-     * @param \DateTime $date
+     * @param DateTime $date
      *
      * @return $this
      */
-    public function setDueDate(\DateTime $date)
+    public function setDueDate(DateTime $date): self
     {
         $this->keys['DT'] = $date->format('Ymd');
 
@@ -265,20 +349,62 @@ class QRPlatba
     }
 
     /**
-     * @param $cc
+     * Metoda vrátí QR Platbu jako textový řetězec.
      *
-     * @return $this
-     * @throws \InvalidArgumentException
+     * @return string
      */
-    public function setCurrency($cc)
+    public function __toString(): string
     {
-        if (!in_array($cc, self::$currencies, true)) {
-            throw new \InvalidArgumentException(sprintf('Currency %s is not supported.', $cc));
+        $chunks = ['SPD', self::VERSION];
+        foreach ($this->keys as $key => $value) {
+            if (null === $value) {
+                continue;
+            }
+            $chunks[] = $key . ':' . $value;
         }
 
-        $this->keys['CC'] = $cc;
+        return implode('*', $chunks);
+    }
 
-        return $this;
+    /**
+     * Metoda vrátí QR kód jako HTML tag, případně jako data-uri.
+     *
+     * @param bool $htmlTag
+     * @param int $size
+     * @param int $margin
+     * @param string $format
+     *
+     * @return string
+     */
+    public function getQRCodeImage(bool $htmlTag = true, int $size = 300, int $margin = 0, string $format = self::FORMAT_PNG): string
+    {
+        $qrCodeResult = $this->getQRCodeResult($size, $margin, $format);
+        $dataUri = $qrCodeResult->getDataUri();
+
+        return $htmlTag ? sprintf('<img src="%s" alt="QR Platba" />', $dataUri) : $dataUri;
+    }
+
+    /**
+     * Instance třídy QrCode pro libovolné úpravy (barevnost, atd.).
+     *
+     * @param int $size
+     * @param int $margin
+     * @param string $format
+     *
+     * @return \Endroid\QrCode\Writer\Result\ResultInterface
+     * @throws \BaconQrCode\Exception\WriterException
+     */
+    public function getQRCodeResult(int $size = 300, int $margin = 0, string $format = self::FORMAT_PNG): ResultInterface
+    {
+        $qrCodeBuilder = Builder::create()
+            ->data((string)$this)
+            ->size($size)
+            ->margin($margin)
+            ->foregroundColor(new Color(0, 0, 0, 0))
+            ->backgroundColor(new Color(255, 255, 255, 0))
+            ->writer($this->getWriterByFormat($format));
+
+        return $qrCodeBuilder->build();
     }
 
     /**
@@ -287,7 +413,7 @@ class QRPlatba
      * @return \Endroid\QrCode\Writer\WriterInterface
      * @throws \BaconQrCode\Exception\WriterException
      */
-    private function getWriterByFormat($format)
+    private function getWriterByFormat(string $format): WriterInterface
     {
         switch ($format) {
             case self::FORMAT_BINARY:
@@ -308,147 +434,21 @@ class QRPlatba
     }
 
     /**
-     * Metoda vrátí QR Platbu jako textový řetězec.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        $chunks = ['SPD', self::VERSION];
-        foreach ($this->keys as $key => $value) {
-            if (null === $value) {
-                continue;
-            }
-            $chunks[] = $key . ':' . $value;
-        }
-
-        return implode('*', $chunks);
-    }
-
-    /**
-     * Metoda vrátí QR kód jako HTML tag, případně jako data-uri.
-     *
-     * @param bool $htmlTag
-     * @param int $size
-     *
-     * @return string
-     */
-    public function getQRCodeImage($htmlTag = true, $size = 300, $margin = 0, $format = self::FORMAT_PNG)
-    {
-        $qrCodeResult = $this->getQRCodeResult($size, $margin, $format);
-        $data = $qrCodeResult->getDataUri();
-
-        return $htmlTag
-            ? sprintf('<img src="%s" alt="QR Platba">', $data)
-            : $data;
-    }
-
-    /**
      * Uložení QR kódu do souboru.
      *
      * @param null|string $filename File name of the QR Code
-     * @param null|string $format Format of the file (png, jpeg, jpg, gif, wbmp)
-     * @param int $size
+     * @param int $size Format of the file (png, jpeg, jpg, gif, wbmp)
+     * @param int $margin
+     * @param string $format
      *
      * @return QRPlatba
      * @throws \BaconQrCode\Exception\WriterException
      */
-    public function saveQRCodeImage($filename = null, $size = 300, $margin = 0, $format = self::FORMAT_PNG)
+    public function saveQRCodeImage(?string $filename = null, int $size = 300, int $margin = 0, string $format = self::FORMAT_PNG): self
     {
         $qrCodeResult = $this->getQRCodeResult($size, $margin, $format);
         $qrCodeResult->saveToFile($filename);
 
         return $this;
-    }
-
-    /**
-     * Instance třídy QrCode pro libovolné úpravy (barevnost, atd.).
-     *
-     * @param int $size
-     * @param int $margin
-     *
-     * @return \Endroid\QrCode\Writer\Result\ResultInterface
-     * @throws \BaconQrCode\Exception\WriterException
-     */
-    public function getQRCodeResult($size = 300, $margin = 0, $format = self::FORMAT_PNG)
-    {
-        $qrCodeBuilder = Builder::create()
-            ->data((string)$this)
-            ->size($size)
-            ->margin($margin)
-            ->foregroundColor(new Color(0, 0, 0, 0))
-            ->backgroundColor(new Color(255, 255, 255, 0))
-            ->writer($this->getWriterByFormat($format));
-
-        return $qrCodeBuilder->build();
-    }
-
-    /**
-     * Převedení čísla účtu na formát IBAN.
-     *
-     * @param $accountNumber
-     *
-     * @return string
-     */
-    public static function accountToIban($accountNumber)
-    {
-        $accountNumber = explode('/', $accountNumber);
-        $bank = $accountNumber[1];
-        $pre = 0;
-        $acc = 0;
-        if (false === mb_strpos($accountNumber[0], '-')) {
-            $acc = $accountNumber[0];
-        } else {
-            [$pre, $acc] = explode('-', $accountNumber[0]);
-        }
-
-        $accountPart = sprintf('%06d%010s', $pre, $acc);
-        $iban = 'CZ00' . $bank . $accountPart;
-
-        $alfa = 'A B C D E F G H I J K L M N O P Q R S T U V W X Y Z';
-        $alfa = explode(' ', $alfa);
-        $alfa_replace = [];
-        for ($i = 1; $i < 27; ++$i) {
-            $alfa_replace[] = $i + 9;
-        }
-        $controlegetal = str_replace(
-            $alfa,
-            $alfa_replace,
-            mb_substr($iban, 4, mb_strlen($iban) - 4) . mb_substr($iban, 0, 2) . '00'
-        );
-        $controlegetal = 98 - (int)bcmod($controlegetal, 97);
-        $iban = sprintf('CZ%02d%04d%06d%010s', $controlegetal, $bank, $pre, $acc);
-
-        return $iban;
-    }
-
-    /**
-     * Odstranění diaktitiky.
-     *
-     * @param $string
-     *
-     * @return mixed
-     */
-    private function stripDiacritics($string)
-    {
-        $string = str_replace(
-            [
-                'ě', 'š', 'č', 'ř', 'ž', 'ý', 'á', 'í', 'é', 'ú', 'ů',
-                'ó', 'ť', 'ď', 'ľ', 'ň', 'ŕ', 'â', 'ă', 'ä', 'ĺ', 'ć',
-                'ç', 'ę', 'ë', 'î', 'ń', 'ô', 'ő', 'ö', 'ů', 'ű', 'ü',
-                'Ě', 'Š', 'Č', 'Ř', 'Ž', 'Ý', 'Á', 'Í', 'É', 'Ú', 'Ů',
-                'Ó', 'Ť', 'Ď', 'Ľ', 'Ň', 'Ä', 'Ć', 'Ë', 'Ö', 'Ü',
-            ],
-            [
-                'e', 's', 'c', 'r', 'z', 'y', 'a', 'i', 'e', 'u', 'u',
-                'o', 't', 'd', 'l', 'n', 'a', 'a', 'a', 'a', 'a', 'a',
-                'c', 'e', 'e', 'i', 'n', 'o', 'o', 'o', 'u', 'u', 'u',
-                'E', 'S', 'C', 'R', 'Z', 'Y', 'A', 'I', 'E', 'U', 'U',
-                'O', 'T', 'D', 'L', 'N', 'A', 'C', 'E', 'O', 'U',
-            ],
-            $string
-        );
-
-        return $string;
     }
 }

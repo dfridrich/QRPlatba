@@ -11,9 +11,11 @@
 
 namespace Swejzi\QRPlatba;
 
+use Exception;
+
 /**
  * Class QRPlatbaException.
  */
-class QRPlatbaException extends \Exception
+class QRPlatbaException extends Exception
 {
 }

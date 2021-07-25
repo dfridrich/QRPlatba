@@ -9,22 +9,20 @@
  * please view LICENSE.
  */
 
+use PHPUnit\Framework\TestCase;
 use Swejzi\QRPlatba\QRPlatba;
 
 /**
  * Class QRPlatbaTest.
  */
-class IBANTest extends PHPUnit_Framework_TestCase
+class IBANTest extends TestCase
 {
 
-    public function testAccountHigherThanMaxInt()
+    public function testAccountHigherThanMaxInt(): void
     {
         $string = QRPlatba::accountToIban('2501301193/2010');
 
-        $this->assertSame(
-            'CZ3620100000002501301193',
-            $string
-        );
+        $this->assertSame('CZ3620100000002501301193', $string);
     }
 
 }

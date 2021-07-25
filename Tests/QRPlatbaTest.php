@@ -9,24 +9,24 @@
  * please view LICENSE.
  */
 
+use PHPUnit\Framework\TestCase;
 use Swejzi\QRPlatba\QRPlatba;
 
 /**
  * Class QRPlatbaTest.
  */
-class QRPlatbaTest extends PHPUnit_Framework_TestCase
+class QRPlatbaTest extends TestCase
 {
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testFakeCurrencyString()
+    public function testFakeCurrencyString(): void
     {
+        $this->expectException(InvalidArgumentException::class);
+
         QRPlatba::create('12-3456789012/0100', '1234.56', '2016001234')
             ->setMessage('Düakrítičs')
             ->setCurrency('FAKE');
     }
 
-    public function testCzkString()
+    public function testCzkString(): void
     {
         $string = QRPlatba::create('12-3456789012/0100', '1234.56', '2016001234')
             ->setMessage('Düakrítičs');
@@ -46,7 +46,7 @@ class QRPlatbaTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testEurString()
+    public function testEurString(): void
     {
         $string = QRPlatba::create('12-3456789012/0100', '1234.56', '2016001234')
             ->setMessage('Düakrítičs')
@@ -58,23 +58,14 @@ class QRPlatbaTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testQrCodeResult()
+    public function testRecipientName(): void
     {
-        $qrPlatba = QRPlatba::create('12-3456789012/0100', 987.60)
-            ->setMessage('QR platba je parádní!')
-            ->getQRCodeResult();
+        $string = QRPlatba::create('12-3456789012/0100', '1234.56', '2016001234')
+            ->setRecipientName('Düakrítičs');
 
-        $this->assertInstanceOf('Endroid\\QrCode\\Writer\\Result\\ResultInterface', $qrPlatba);
-    }
-
-    public function testRecipientName()
-    {
-	    $string = QRPlatba::create('12-3456789012/0100', '1234.56', '2016001234')
-		    ->setRecipientName('Düakrítičs');
-
-	    $this->assertSame(
-		    'SPD*1.0*ACC:CZ0301000000123456789012*AM:1234.56*CC:CZK*X-VS:2016001234*RN:Duakritics',
-		    $string->__toString()
-	    );
+        $this->assertSame(
+            'SPD*1.0*ACC:CZ0301000000123456789012*AM:1234.56*CC:CZK*X-VS:2016001234*RN:Duakritics',
+            $string->__toString()
+        );
     }
 }
