@@ -12,14 +12,10 @@
 namespace Swejzi\QRPlatba;
 
 use BaconQrCode\Exception\WriterException;
-use BaconQrCode\Writer;
-use Endroid\QrCode\Builder\Builder;
-use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\BinaryWriter;
 use Endroid\QrCode\Writer\DebugWriter;
 use Endroid\QrCode\Writer\EpsWriter;
-use Endroid\QrCode\Writer\PdfWriter;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\SvgWriter;
 
@@ -38,7 +34,6 @@ class QRPlatba
     const FORMAT_BINARY = 'binary';
     const FORMAT_DEBUG = 'debug';
     const FORMAT_ESP = 'esp';
-    const FORMAT_PDF = 'pdf';
     const FORMAT_PNG = 'png';
     const FORMAT_SVG = 'svg';
 
@@ -296,8 +291,6 @@ class QRPlatba
                 return new DebugWriter();
             case self::FORMAT_ESP:
                 return new EpsWriter();
-            case self::FORMAT_PDF:
-                return new PdfWriter();
             case self::FORMAT_PNG:
                 return new PngWriter();
             case self::FORMAT_SVG:
@@ -336,7 +329,7 @@ class QRPlatba
     public function getQRCodeImage($htmlTag = true, $size = 300, $margin = 0, $format = self::FORMAT_PNG)
     {
         $qrCodeResult = $this->getQRCodeResult($size, $margin, $format);
-        $data = $qrCodeResult->getDataUri();
+        $data = $qrCodeResult->writeDataUri();
 
         return $htmlTag
             ? sprintf('<img src="%s" alt="QR Platba">', $data)
@@ -356,7 +349,7 @@ class QRPlatba
     public function saveQRCodeImage($filename = null, $size = 300, $margin = 0, $format = self::FORMAT_PNG)
     {
         $qrCodeResult = $this->getQRCodeResult($size, $margin, $format);
-        $qrCodeResult->saveToFile($filename);
+        $qrCodeResult->writeFile($filename);
 
         return $this;
     }
@@ -367,20 +360,19 @@ class QRPlatba
      * @param int $size
      * @param int $margin
      *
-     * @return \Endroid\QrCode\Writer\Result\ResultInterface
+     * @return \Endroid\QrCode\QrCode
      * @throws \BaconQrCode\Exception\WriterException
      */
     public function getQRCodeResult($size = 300, $margin = 0, $format = self::FORMAT_PNG)
     {
-        $qrCodeBuilder = Builder::create()
-            ->data((string)$this)
-            ->size($size)
-            ->margin($margin)
-            ->foregroundColor(new Color(0, 0, 0, 0))
-            ->backgroundColor(new Color(255, 255, 255, 0))
-            ->writer($this->getWriterByFormat($format));
+        $qrCodeBuilder = new QrCode((string)$this);
+        $qrCodeBuilder->setSize($size);
+        $qrCodeBuilder->setMargin($margin);
+        $qrCodeBuilder->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0]);
+        $qrCodeBuilder->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0]);
+        $qrCodeBuilder->setWriter($this->getWriterByFormat($format));
 
-        return $qrCodeBuilder->build();
+        return $qrCodeBuilder;
     }
 
     /**

@@ -72,7 +72,6 @@ $qrPlatba->saveQRCodeImage("qrcode.svg", 100, 0, "svg");
 
 Aktuální možné formáty jsou: 
 * Png
-* Pdf
 * Svg
 * Eps
 * binární

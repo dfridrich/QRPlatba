@@ -9,18 +9,18 @@
  * please view LICENSE.
  */
 
+use PHPUnit\Framework\TestCase;
 use Swejzi\QRPlatba\QRPlatba;
 
 /**
  * Class QRPlatbaTest.
  */
-class QRPlatbaTest extends PHPUnit_Framework_TestCase
+class QRPlatbaTest extends TestCase
 {
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testFakeCurrencyString()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         QRPlatba::create('12-3456789012/0100', '1234.56', '2016001234')
             ->setMessage('Düakrítičs')
             ->setCurrency('FAKE');
@@ -64,7 +64,7 @@ class QRPlatbaTest extends PHPUnit_Framework_TestCase
             ->setMessage('QR platba je parádní!')
             ->getQRCodeResult();
 
-        $this->assertInstanceOf('Endroid\\QrCode\\Writer\\Result\\ResultInterface', $qrPlatba);
+        $this->assertInstanceOf('Endroid\\QrCode\\QrCode', $qrPlatba);
     }
 
     public function testRecipientName()
