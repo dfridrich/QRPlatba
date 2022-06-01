@@ -69,6 +69,8 @@ class QRPlatba
 
     /**
      * @var array
+     *
+     * @see https://qr-platba.cz/wp-content/uploads/QR_platba_standard_CBA.pdf
      */
     private $keys = [
         'ACC' => null,
@@ -107,6 +109,10 @@ class QRPlatba
         // Max. 20 znaků. -  Identifikátor platby na straně příkazce. Jedná se o interní ID, jehož použití a interpretace závisí na bance příkazce.
         'X-URL' => null,
         // Max. 140 znaků. -  URL, které je možno využít pro vlastní potřebu
+        'FRQ' => null,
+        // Právě 3 znaky - Alfanumerický kód označující frekvenci platby: 1D = denně 1M = měsíčně 3M = čtvrtletně 6M = pololetně 1Y = ročně.
+        'X-SELF' => null,
+        // Max. 60 znaků - Zpráva pro vlastní potřebu plátce.
     ];
 
     /**
@@ -344,6 +350,35 @@ class QRPlatba
     public function setDueDate(DateTime $date): self
     {
         $this->keys['DT'] = $date->format('Ymd');
+
+        return $this;
+    }
+
+    /**
+     * Nastavení frekvence platby
+     * 1D = denně 1M = měsíčně 3M = čtvrtletně 6M = pololetně 1Y = ročně.
+     *
+     * @param string $frequency
+     *
+     * @return $this
+     */
+    public function setFrequency(string $frequency): self
+    {
+        $this->keys['FRQ'] = $frequency;
+
+        return $this;
+    }
+
+    /**
+     * Nastavení zprávy pro vlastní potřebu plátce
+     *
+     * @param string $message
+     *
+     * @return $this
+     */
+    public function setMessageForSelf(string $message): self
+    {
+        $this->keys['X-SELF'] = $message;
 
         return $this;
     }

@@ -32,7 +32,7 @@ class QRPlatbaTest extends TestCase
             ->setMessage('Düakrítičs');
 
         $this->assertSame(
-            'SPD*1.0*ACC:CZ0301000000123456789012*AM:1234.56*CC:CZK*MSG:Duakritics*X-VS:2016001234',
+            'SPD*1.1*ACC:CZ0301000000123456789012*AM:1234.56*CC:CZK*MSG:Duakritics*X-VS:2016001234',
             $string->__toString()
         );
 
@@ -41,7 +41,7 @@ class QRPlatbaTest extends TestCase
             ->setCurrency('CZK');
 
         $this->assertSame(
-            'SPD*1.0*ACC:CZ0301000000123456789012*AM:1234.56*CC:CZK*MSG:Duakritics*X-VS:2016001234',
+            'SPD*1.1*ACC:CZ0301000000123456789012*AM:1234.56*CC:CZK*MSG:Duakritics*X-VS:2016001234',
             $string->__toString()
         );
     }
@@ -53,7 +53,7 @@ class QRPlatbaTest extends TestCase
             ->setCurrency('EUR');
 
         $this->assertSame(
-            'SPD*1.0*ACC:CZ0301000000123456789012*AM:1234.56*CC:EUR*MSG:Duakritics*X-VS:2016001234',
+            'SPD*1.1*ACC:CZ0301000000123456789012*AM:1234.56*CC:EUR*MSG:Duakritics*X-VS:2016001234',
             $string->__toString()
         );
     }
@@ -64,7 +64,7 @@ class QRPlatbaTest extends TestCase
             ->setRecipientName('Düakrítičs');
 
         $this->assertSame(
-            'SPD*1.0*ACC:CZ0301000000123456789012*AM:1234.56*CC:CZK*X-VS:2016001234*RN:Duakritics',
+            'SPD*1.1*ACC:CZ0301000000123456789012*AM:1234.56*CC:CZK*X-VS:2016001234*RN:Duakritics',
             $string->__toString()
         );
     }
