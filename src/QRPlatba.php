@@ -12,6 +12,7 @@
 namespace Defr\QRPlatba;
 
 use DateTime;
+use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\QrCode;
 use Iban\Validation\Iban;
 use Iban\Validation\Validator;
@@ -533,11 +534,10 @@ class QRPlatba
      */
     public function getQRCodeInstance($size = 300)
     {
-        $qrCode = new QrCode();
-        $qrCode->setText((string)$this);
+        $qrCode = new QrCode((string)$this);
         $qrCode->setSize($size);
-        $qrCode->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0]);
-        $qrCode->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0]);
+        $qrCode->setForegroundColor(new Color(0, 0, 0, 0));
+        $qrCode->setBackgroundColor(new Color(255, 255, 0));
 
         return $qrCode;
     }
