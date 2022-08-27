@@ -38,7 +38,8 @@ use Defr\QRPlatba\QRPlatba;
 
 $qrPlatba = new QRPlatba();
 
-$qrPlatba->setAccount('12-3456789012/0100')
+$qrPlatba->setAccount('12-3456789012/0100') // nastavení č. účtu
+    ->setIBAN('CZ6508000000192000145399') // nastavení č. účtu
     ->setVariableSymbol('2016001234')
     ->setMessage('Toto je první QR platba.')
     ->setSpecificSymbol('0308')
@@ -55,6 +56,14 @@ Lze použít i jednodušší zápis:
 
 ```php
 echo QRPlatba::create('12-3456789012/0100', 987.60)
+    ->setMessage('QR platba je parádní!')
+    ->getQRCodeImage();
+```
+
+Pro IBAN pak:
+
+```php
+echo QRPlatba::create('CZ6508000000192000145399', 987.60)
     ->setMessage('QR platba je parádní!')
     ->getQRCodeImage();
 ```
