@@ -8,7 +8,7 @@
     </coverage>
     <testsuites>
         <testsuite name="dfridrich/QRPlatba test suite">
-            <directory suffix="Test.php">./Tests</directory>
+            <directory suffix="Test.php">./tests</directory>
         </testsuite>
     </testsuites>
 </phpunit>
