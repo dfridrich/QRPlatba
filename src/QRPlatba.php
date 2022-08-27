@@ -553,7 +553,7 @@ class QRPlatba
     {
         $accountNumber = explode('/', $accountNumber);
         if (count($accountNumber) !== 2) {
-            throw new QRPlatbaException('Sorry, but this is not bank account');
+            throw new QRPlatbaException('Sorry, but this is not a bank account');
         }
         $bank = $accountNumber[1];
         $pre = 0;
