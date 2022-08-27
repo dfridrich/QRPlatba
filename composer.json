@@ -17,11 +17,12 @@
     ],
     "require": {
         "php": ">=7.4.0",
-        "endroid/qr-code": "^3.0",
-        "jschaedl/iban-validation": "^1.4"
+        "endroid/qr-code": "^4",
+        "jschaedl/iban-validation": "^1.4",
+        "ext-mbstring": "*",
+        "ext-bcmath": "*"
     },
     "suggest": {
-        "ext-bcmath": "*"
     },
     "autoload": {
         "psr-4": {
