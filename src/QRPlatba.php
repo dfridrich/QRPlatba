@@ -154,7 +154,7 @@ class QRPlatba
      */
     public function setAmount($amount)
     {
-        $this->keys['AM'] = sprintf('%.2f', $amount);
+        $this->keys['AM'] = number_format($amount, 2, '.', '');
 
         return $this;
     }
