@@ -11,6 +11,7 @@
 
 use Defr\QRPlatba\QRPlatba;
 use Defr\QRPlatba\QRPlatbaException;
+use Endroid\QrCode\Writer\Result\ResultInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -83,7 +84,7 @@ class QRPlatbaTest extends TestCase
             ->setMessage('QR platba je parádní!')
             ->getQRCodeInstance();
 
-        $this->assertInstanceOf('Endroid\\QrCode\\QrCode', $qrPlatba);
+        $this->assertInstanceOf(ResultInterface::class, $qrPlatba);
     }
 
     public function testRecipientName()

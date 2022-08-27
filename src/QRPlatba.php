@@ -13,7 +13,11 @@ namespace Defr\QRPlatba;
 
 use DateTime;
 use Endroid\QrCode\Color\Color;
+use Endroid\QrCode\Exception\UnsupportedExtensionException;
 use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
+use Endroid\QrCode\Writer\Result\ResultInterface;
+use Endroid\QrCode\Writer\SvgWriter;
 use Iban\Validation\Iban;
 use Iban\Validation\Validator;
 
@@ -317,7 +321,7 @@ class QRPlatba
      * @return $this
      * @throws QRPlatbaException
      */
-    public function setIBAN($iban)
+    public function setIBAN($iban): self
     {
         $iban = new Iban($iban);
         $validator = new Validator();
@@ -329,6 +333,8 @@ class QRPlatba
         }
 
         $this->keys['ACC'] = $iban->getNormalizedIban();
+
+        return $this;
     }
 
 
@@ -499,7 +505,7 @@ class QRPlatba
     public function getQRCodeImage($htmlTag = true, $size = 300)
     {
         $qrCode = $this->getQRCodeInstance($size);
-        $data = $qrCode->writeDataUri();
+        $data = $qrCode->getDataUri();
 
         return $htmlTag
             ? sprintf('<img src="%s" alt="QR Platba">', $data)
@@ -508,38 +514,34 @@ class QRPlatba
 
     /**
      * Uložení QR kódu do souboru.
-     *
-     * @param null|string $filename File name of the QR Code
-     * @param null|string $format Format of the file (png, jpeg, jpg, gif, wbmp)
-     * @param int $size
-     *
-     * @return QRPlatba
-     * @throws \Endroid\QrCode\Exception\UnsupportedExtensionException
      */
-    public function saveQRCodeImage($filename = null, $format = 'png', $size = 300)
+    public function saveQRCodeImage(?string $filename = null, ?string $format = 'png', int $size = 300): self
     {
-        $qrCode = $this->getQRCodeInstance($size);
-        $qrCode->setWriterByExtension($format);
-        $qrCode->writeFile($filename);
+        $qrCode = $this->getQRCodeInstance($size, $format);
+        $qrCode->saveToFile($filename);
 
         return $this;
     }
 
     /**
      * Instance třídy QrCode pro libovolné úpravy (barevnost, atd.).
-     *
-     * @param int $size
-     *
-     * @return QrCode
      */
-    public function getQRCodeInstance($size = 300)
+    public function getQRCodeInstance(int $size = 300, string $format = 'png'): ResultInterface
     {
         $qrCode = new QrCode((string)$this);
         $qrCode->setSize($size);
         $qrCode->setForegroundColor(new Color(0, 0, 0, 0));
-        $qrCode->setBackgroundColor(new Color(255, 255, 0));
+        $qrCode->setBackgroundColor(new Color(255, 255, 255, 0));
 
-        return $qrCode;
+        if ($format === 'png') {
+            $writer = new PngWriter();
+        } elseif ($format === 'svg') {
+            $writer = new SvgWriter();
+        } else {
+            throw new QRPlatbaException('Unknown output format');
+        }
+
+        return $writer->write($qrCode);
     }
 
     /**

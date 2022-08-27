@@ -39,18 +39,25 @@ use Defr\QRPlatba\QRPlatba;
 $qrPlatba = new QRPlatba();
 
 $qrPlatba->setAccount('12-3456789012/0100') // nastavení č. účtu
-    ->setIBAN('CZ6508000000192000145399') // nastavení č. účtu
+    ->setIBAN('SK3112000000198742637541') // nastavení č. účtu
     ->setVariableSymbol('2016001234')
     ->setMessage('Toto je první QR platba.')
-    ->setSpecificSymbol('0308')
+    ->setConstantSymbol('0308')
     ->setSpecificSymbol('1234')
+    ->setAmount('1234.56')
     ->setCurrency('CZK') // Výchozí je CZK, lze zadat jakýkoli ISO kód měny
     ->setDueDate(new \DateTime());
 
 echo $qrPlatba->getQRCodeImage(); // Zobrazí <img> tag s kódem, viz níže  
 ```
 
-![Ukázka](qrcode.png)
+CZ účet s CZK:
+
+![Ukázka](qrcode_cz.png)
+
+SK IBAN s EUR:
+
+![Ukázka](qrcode_sk.png)
 
 Lze použít i jednodušší zápis:
 
@@ -90,7 +97,7 @@ Pro další je potřeba dopsat vlastní Writter
 Zobrazení data-uri
 ```php
 // data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAFAAQMAAAD3XjfpAAAA...
-echo $qrPlatba->getQRCodeInstance()->writeDataUri();
+echo $qrPlatba->getQRCodeInstance()->getDataUri();
 ```
 
 ## Odkazy
