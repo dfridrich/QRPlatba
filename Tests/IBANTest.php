@@ -10,6 +10,7 @@
  */
 
 use Defr\QRPlatba\QRPlatba;
+use Defr\QRPlatba\QRPlatbaException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -27,5 +28,37 @@ class IBANTest extends TestCase
             $string
         );
     }
+
+
+    public function testPrepareIban()
+    {
+        $qrplatba = new QRPlatba();
+
+        $this->assertSame(
+            'CZ3620100000002501301193',
+            $qrplatba->prepareIban('CZ3620100000002501301193')
+        );
+
+        $this->assertSame(
+            'CZ0708000000001234567987',
+            $qrplatba->prepareIban('1234567987/0800')
+        );
+
+        $string = QRPlatba::create('CZ0301000000123456789012');
+        $this->assertSame(
+            'SPD*1.0*ACC:CZ0301000000123456789012*CC:CZK',
+            $string->__toString()
+        );
+    }
+
+
+    public function testInvalidIban()
+    {
+        $this->expectException(QRPlatbaException::class);
+
+        $qrplatba = new QRPlatba();
+        $qrplatba->prepareIban('CZ36201000000025013011935555');
+    }
+
 
 }

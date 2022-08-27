@@ -18,6 +18,9 @@
     "require": {
         "php": ">=7.4.0",
         "endroid/qr-code": "^3.0",
+        "jschaedl/iban-validation": "^1.4"
+    },
+    "suggest": {
         "ext-bcmath": "*"
     },
     "autoload": {
@@ -27,8 +30,5 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^9"
-    },
-    "config": {
-        "bin-dir": "bin"
     }
 }
