@@ -32,23 +32,168 @@ class QRPlatba
      * @var array
      */
     private static $currencies = [
-        'AED', 'AFN', 'ALL', 'AMD', 'ANG', 'AOA', 'ARS', 'AUD', 'AWG', 'AZN',
-        'BAM', 'BBD', 'BDT', 'BGN', 'BHD', 'BIF', 'BMD', 'BND', 'BOB', 'BRL',
-        'BSD', 'BTN', 'BWP', 'BYN', 'BZD', 'CAD', 'CDF', 'CHF', 'CLP', 'CNY',
-        'COP', 'CRC', 'CUC', 'CUP', 'CVE', 'CZK', 'DJF', 'DKK', 'DOP', 'DZD',
-        'EGP', 'ERN', 'ETB', 'EUR', 'FJD', 'FKP', 'GBP', 'GEL', 'GGP', 'GHS',
-        'GIP', 'GMD', 'GNF', 'GTQ', 'GYD', 'HKD', 'HNL', 'HRK', 'HTG', 'HUF',
-        'IDR', 'ILS', 'IMP', 'INR', 'IQD', 'IRR', 'ISK', 'JEP', 'JMD', 'JOD',
-        'JPY', 'KES', 'KGS', 'KHR', 'KMF', 'KPW', 'KRW', 'KWD', 'KYD', 'KZT',
-        'LAK', 'LBP', 'LKR', 'LRD', 'LSL', 'LYD', 'MAD', 'MDL', 'MGA', 'MKD',
-        'MMK', 'MNT', 'MOP', 'MRO', 'MUR', 'MVR', 'MWK', 'MXN', 'MYR', 'MZN',
-        'NAD', 'NGN', 'NIO', 'NOK', 'NPR', 'NZD', 'OMR', 'PAB', 'PEN', 'PGK',
-        'PHP', 'PKR', 'PLN', 'PYG', 'QAR', 'RON', 'RSD', 'RUB', 'RWF', 'SAR',
-        'SBD', 'SCR', 'SDG', 'SEK', 'SGD', 'SHP', 'SLL', 'SOS', 'SPL', 'SRD',
-        'STD', 'SVC', 'SYP', 'SZL', 'THB', 'TJS', 'TMT', 'TND', 'TOP', 'TRY',
-        'TTD', 'TVD', 'TWD', 'TZS', 'UAH', 'UGX', 'USD', 'UYU', 'UZS', 'VEF',
-        'VND', 'VUV', 'WST', 'XAF', 'XCD', 'XDR', 'XOF', 'XPF', 'YER', 'ZAR',
-        'ZMW', 'ZWD',
+        'AED',
+        'AFN',
+        'ALL',
+        'AMD',
+        'ANG',
+        'AOA',
+        'ARS',
+        'AUD',
+        'AWG',
+        'AZN',
+        'BAM',
+        'BBD',
+        'BDT',
+        'BGN',
+        'BHD',
+        'BIF',
+        'BMD',
+        'BND',
+        'BOB',
+        'BRL',
+        'BSD',
+        'BTN',
+        'BWP',
+        'BYN',
+        'BZD',
+        'CAD',
+        'CDF',
+        'CHF',
+        'CLP',
+        'CNY',
+        'COP',
+        'CRC',
+        'CUC',
+        'CUP',
+        'CVE',
+        'CZK',
+        'DJF',
+        'DKK',
+        'DOP',
+        'DZD',
+        'EGP',
+        'ERN',
+        'ETB',
+        'EUR',
+        'FJD',
+        'FKP',
+        'GBP',
+        'GEL',
+        'GGP',
+        'GHS',
+        'GIP',
+        'GMD',
+        'GNF',
+        'GTQ',
+        'GYD',
+        'HKD',
+        'HNL',
+        'HRK',
+        'HTG',
+        'HUF',
+        'IDR',
+        'ILS',
+        'IMP',
+        'INR',
+        'IQD',
+        'IRR',
+        'ISK',
+        'JEP',
+        'JMD',
+        'JOD',
+        'JPY',
+        'KES',
+        'KGS',
+        'KHR',
+        'KMF',
+        'KPW',
+        'KRW',
+        'KWD',
+        'KYD',
+        'KZT',
+        'LAK',
+        'LBP',
+        'LKR',
+        'LRD',
+        'LSL',
+        'LYD',
+        'MAD',
+        'MDL',
+        'MGA',
+        'MKD',
+        'MMK',
+        'MNT',
+        'MOP',
+        'MRO',
+        'MUR',
+        'MVR',
+        'MWK',
+        'MXN',
+        'MYR',
+        'MZN',
+        'NAD',
+        'NGN',
+        'NIO',
+        'NOK',
+        'NPR',
+        'NZD',
+        'OMR',
+        'PAB',
+        'PEN',
+        'PGK',
+        'PHP',
+        'PKR',
+        'PLN',
+        'PYG',
+        'QAR',
+        'RON',
+        'RSD',
+        'RUB',
+        'RWF',
+        'SAR',
+        'SBD',
+        'SCR',
+        'SDG',
+        'SEK',
+        'SGD',
+        'SHP',
+        'SLL',
+        'SOS',
+        'SPL',
+        'SRD',
+        'STD',
+        'SVC',
+        'SYP',
+        'SZL',
+        'THB',
+        'TJS',
+        'TMT',
+        'TND',
+        'TOP',
+        'TRY',
+        'TTD',
+        'TVD',
+        'TWD',
+        'TZS',
+        'UAH',
+        'UGX',
+        'USD',
+        'UYU',
+        'UZS',
+        'VEF',
+        'VND',
+        'VUV',
+        'WST',
+        'XAF',
+        'XCD',
+        'XDR',
+        'XOF',
+        'XPF',
+        'YER',
+        'ZAR',
+        'ZMW',
+        'ZWD',
     ];
 
     /**
@@ -101,7 +246,7 @@ class QRPlatba
      * @param null $variable
      * @param null $currency
      * @throws \InvalidArgumentException
-	 * @throws QRPlatbaException
+     * @throws QRPlatbaException
      */
     public function __construct($account = null, $amount = null, $variable = null, $currency = null)
     {
@@ -128,8 +273,8 @@ class QRPlatba
      *
      * @return QRPlatba
      * @throws \InvalidArgumentException
-	 * @throws QRPlatbaException
-	 */
+     * @throws QRPlatbaException
+     */
     public static function create($account = null, $amount = null, $variable = null)
     {
         return new self($account, $amount, $variable);
@@ -139,69 +284,69 @@ class QRPlatba
      * Nastavení čísla účtu ve formátu 12-3456789012/0100 nebo IBAN
      *
      * @param $account
-	 * @throws QRPlatbaException
      * @return $this
+     * @throws QRPlatbaException
      */
     public function setAccount($account)
     {
-		$this->keys['ACC'] = $this->prepareIban($account);
+        $this->keys['ACC'] = $this->prepareIban($account);
 
         return $this;
     }
 
 
-	/**
-	 * Nastavení alternativního čísla účtu ve formátu 12-3456789012/0100 nebo IBAN
-	 *
-	 * @param $account
-	 * @throws QRPlatbaException
-	 * @return $this
-	 */
-	public function addAlternativeAccount($account)
-	{
-		$this->keys['ALT-ACC'] .= ($this->keys['ALT-ACC'] ? ',' : '') . $this->prepareIban($account);
+    /**
+     * Nastavení alternativního čísla účtu ve formátu 12-3456789012/0100 nebo IBAN
+     *
+     * @param $account
+     * @return $this
+     * @throws QRPlatbaException
+     */
+    public function addAlternativeAccount($account)
+    {
+        $this->keys['ALT-ACC'] .= ($this->keys['ALT-ACC'] ? ',' : '').$this->prepareIban($account);
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Přímé nastavení účtu v IBAN formátu
-	 *
-	 * @param string $iban
-	 * @throws QRPlatbaException
-	 * @return $this
-	 */
-	public function setIBAN($iban)
-	{
-		$iban = new Iban($iban);
-		$validator = new Validator();
+    /**
+     * Přímé nastavení účtu v IBAN formátu
+     *
+     * @param string $iban
+     * @return $this
+     * @throws QRPlatbaException
+     */
+    public function setIBAN($iban)
+    {
+        $iban = new Iban($iban);
+        $validator = new Validator();
 
-		if (!$validator->validate($iban)) {
-			foreach ($validator->getViolations() as $violation) {
-				throw new QRPlatbaException($violation);
-			}
-		}
+        if (!$validator->validate($iban)) {
+            foreach ($validator->getViolations() as $violation) {
+                throw new QRPlatbaException($violation);
+            }
+        }
 
-		$this->keys['ACC'] = $iban->getNormalizedIban();
-	}
+        $this->keys['ACC'] = $iban->getNormalizedIban();
+    }
 
 
-	/**
-	 * Rozhodne zda-li se jedna o cislo uctu nebo IBAN a vrati vzdy spravne pripraveny IBAN
-	 * @param $account
-	 * @throws QRPlatbaException
-	 * @return string
-	 */
-	public function prepareIban(string $account): string
-	{
-		$ibanTest = new Iban($account);
-		$validator = new Validator();
-		if ($validator->validate($ibanTest)) {
-			return $ibanTest->getNormalizedIban();
-		}
+    /**
+     * Rozhodne zda-li se jedna o cislo uctu nebo IBAN a vrati vzdy spravne pripraveny IBAN
+     * @param $account
+     * @return string
+     * @throws QRPlatbaException
+     */
+    public function prepareIban(string $account): string
+    {
+        $ibanTest = new Iban($account);
+        $validator = new Validator();
+        if ($validator->validate($ibanTest)) {
+            return $ibanTest->getNormalizedIban();
+        }
 
-		return self::accountToIban($account);
-	}
+        return self::accountToIban($account);
+    }
 
 
     /**
@@ -251,9 +396,9 @@ class QRPlatba
      *
      * @param $ss
      *
+     * @return $this
      * @throws QRPlatbaException
      *
-     * @return $this
      */
     public function setSpecificSymbol($ss)
     {
@@ -279,19 +424,19 @@ class QRPlatba
         return $this;
     }
 
-	/**
-	 * Nastavení jména příjemce. Z řetězce bude odstraněna diaktirika.
-	 *
-	 * @param $name
-	 *
-	 * @return $this
-	 */
-	public function setRecipientName($name)
-	{
-		$this->keys['RN'] = mb_substr($this->stripDiacritics($name), 0, 35);
+    /**
+     * Nastavení jména příjemce. Z řetězce bude odstraněna diaktirika.
+     *
+     * @param $name
+     *
+     * @return $this
+     */
+    public function setRecipientName($name)
+    {
+        $this->keys['RN'] = mb_substr($this->stripDiacritics($name), 0, 35);
 
-		return $this;
-	}
+        return $this;
+    }
 
     /**
      * Nastavení data úhrady.
@@ -346,7 +491,7 @@ class QRPlatba
      * Metoda vrátí QR kód jako HTML tag, případně jako data-uri.
      *
      * @param bool $htmlTag
-     * @param int  $size
+     * @param int $size
      *
      * @return string
      */
@@ -389,7 +534,7 @@ class QRPlatba
     public function getQRCodeInstance($size = 300)
     {
         $qrCode = new QrCode();
-        $qrCode->setText((string) $this);
+        $qrCode->setText((string)$this);
         $qrCode->setSize($size);
         $qrCode->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0]);
         $qrCode->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0]);
@@ -401,14 +546,14 @@ class QRPlatba
      * Převedení čísla účtu na formát IBAN.
      *
      * @param $accountNumber
-     * @throws QRPlatbaException
      * @return string
+     * @throws QRPlatbaException
      */
     public static function accountToIban($accountNumber)
     {
         $accountNumber = explode('/', $accountNumber);
-        if(count($accountNumber) !== 2) {
-        	throw new QRPlatbaException('Sorry, but this is not bank account');
+        if (count($accountNumber) !== 2) {
+            throw new QRPlatbaException('Sorry, but this is not bank account');
         }
         $bank = $accountNumber[1];
         $pre = 0;
@@ -433,7 +578,7 @@ class QRPlatba
             $alfa_replace,
             mb_substr($iban, 4, mb_strlen($iban) - 4).mb_substr($iban, 0, 2).'00'
         );
-        $controlegetal = 98 - (int) bcmod($controlegetal, 97);
+        $controlegetal = 98 - (int)bcmod($controlegetal, 97);
         $iban = sprintf('CZ%02d%04d%06d%010s', $controlegetal, $bank, $pre, $acc);
 
         return $iban;
@@ -450,18 +595,116 @@ class QRPlatba
     {
         $string = str_replace(
             [
-                'ě', 'š', 'č', 'ř', 'ž', 'ý', 'á', 'í', 'é', 'ú', 'ů',
-                'ó', 'ť', 'ď', 'ľ', 'ň', 'ŕ', 'â', 'ă', 'ä', 'ĺ', 'ć',
-                'ç', 'ę', 'ë', 'î', 'ń', 'ô', 'ő', 'ö', 'ů', 'ű', 'ü',
-                'Ě', 'Š', 'Č', 'Ř', 'Ž', 'Ý', 'Á', 'Í', 'É', 'Ú', 'Ů',
-                'Ó', 'Ť', 'Ď', 'Ľ', 'Ň', 'Ä', 'Ć', 'Ë', 'Ö', 'Ü'
+                'ě',
+                'š',
+                'č',
+                'ř',
+                'ž',
+                'ý',
+                'á',
+                'í',
+                'é',
+                'ú',
+                'ů',
+                'ó',
+                'ť',
+                'ď',
+                'ľ',
+                'ň',
+                'ŕ',
+                'â',
+                'ă',
+                'ä',
+                'ĺ',
+                'ć',
+                'ç',
+                'ę',
+                'ë',
+                'î',
+                'ń',
+                'ô',
+                'ő',
+                'ö',
+                'ů',
+                'ű',
+                'ü',
+                'Ě',
+                'Š',
+                'Č',
+                'Ř',
+                'Ž',
+                'Ý',
+                'Á',
+                'Í',
+                'É',
+                'Ú',
+                'Ů',
+                'Ó',
+                'Ť',
+                'Ď',
+                'Ľ',
+                'Ň',
+                'Ä',
+                'Ć',
+                'Ë',
+                'Ö',
+                'Ü',
             ],
             [
-                'e', 's', 'c', 'r', 'z', 'y', 'a', 'i', 'e', 'u', 'u',
-                'o', 't', 'd', 'l', 'n', 'a', 'a', 'a', 'a', 'a', 'a',
-                'c', 'e', 'e', 'i', 'n', 'o', 'o', 'o', 'u', 'u', 'u',
-                'E', 'S', 'C', 'R', 'Z', 'Y', 'A', 'I', 'E', 'U', 'U',
-                'O', 'T', 'D', 'L', 'N', 'A', 'C', 'E', 'O', 'U'
+                'e',
+                's',
+                'c',
+                'r',
+                'z',
+                'y',
+                'a',
+                'i',
+                'e',
+                'u',
+                'u',
+                'o',
+                't',
+                'd',
+                'l',
+                'n',
+                'a',
+                'a',
+                'a',
+                'a',
+                'a',
+                'a',
+                'c',
+                'e',
+                'e',
+                'i',
+                'n',
+                'o',
+                'o',
+                'o',
+                'u',
+                'u',
+                'u',
+                'E',
+                'S',
+                'C',
+                'R',
+                'Z',
+                'Y',
+                'A',
+                'I',
+                'E',
+                'U',
+                'U',
+                'O',
+                'T',
+                'D',
+                'L',
+                'N',
+                'A',
+                'C',
+                'E',
+                'O',
+                'U',
             ],
             $string
         );
