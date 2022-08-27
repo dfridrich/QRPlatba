@@ -1,7 +1,5 @@
 <?php
 
-require __DIR__ .  DIRECTORY_SEPARATOR . 'bootstrap.php';
-
 /*
  * This file is part of the library "QRPlatba".
  *

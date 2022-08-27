@@ -1,7 +1,5 @@
 <?php
 
-require __DIR__ .  DIRECTORY_SEPARATOR . 'bootstrap.php';
-
 /*
  * This file is part of the library "QRPlatba".
  *
@@ -17,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * Class QRPlatbaTest.
  */
-class QRPlatbaTest extends PHPUnit_Framework_TestCase
+class QRPlatbaTest extends TestCase
 {
     public function testFakeCurrencyString()
     {
