@@ -14,7 +14,12 @@ namespace Defr\QRPlatba;
 use DateTime;
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Exception\UnsupportedExtensionException;
+use Endroid\QrCode\Label\Alignment\LabelAlignmentLeft;
+use Endroid\QrCode\Label\Font\Font;
+use Endroid\QrCode\Label\Font\OpenSans;
+use Endroid\QrCode\Label\Label;
 use Endroid\QrCode\QrCode;
+use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Writer\Result\ResultInterface;
 use Endroid\QrCode\Writer\SvgWriter;
@@ -526,12 +531,21 @@ class QRPlatba
     /**
      * Instance třídy QrCode pro libovolné úpravy (barevnost, atd.).
      */
-    public function getQRCodeInstance(int $size = 300, string $format = 'png'): ResultInterface
+    public function getQRCodeInstance(int $size = 300, string $format = 'png', $label = 'QR Platba'): ResultInterface
     {
         $qrCode = new QrCode((string)$this);
-        $qrCode->setSize($size);
-        $qrCode->setForegroundColor(new Color(0, 0, 0, 0));
-        $qrCode->setBackgroundColor(new Color(255, 255, 255, 0));
+        $black = new Color(0, 0, 0, 0);
+        $white = new Color(255, 255, 255, 0);
+
+        $qrCode->setForegroundColor($black)
+            ->setSize($size)
+            ->setBackgroundColor($white)
+            ->setRoundBlockSizeMode(new RoundBlockSizeModeMargin());
+
+        $label = Label::create($label)
+            ->setAlignment(new LabelAlignmentLeft())
+            ->setFont(new OpenSans())
+            ->setTextColor($black);
 
         if ($format === 'png') {
             $writer = new PngWriter();
@@ -541,7 +555,7 @@ class QRPlatba
             throw new QRPlatbaException('Unknown output format');
         }
 
-        return $writer->write($qrCode);
+        return $writer->write($qrCode, null, $label);
     }
 
     /**
