@@ -59,6 +59,16 @@ class QRPlatbaTest extends TestCase
         );
     }
 
+    public function testIBAN()
+    {
+        $string = QRPlatba::create('CZ6508000000192000145399', '1234.56', '2016001234');
+
+        $this->assertSame(
+            'SPD*1.0*ACC:CZ6508000000192000145399*AM:1234.56*CC:CZK*X-VS:2016001234',
+            $string->__toString()
+        );
+    }
+
     public function testQrCodeInstante()
     {
         $qrPlatba = QRPlatba::create('12-3456789012/0100', 987.60)
@@ -99,7 +109,6 @@ class QRPlatbaTest extends TestCase
             'SPD*1.0*ACC:CZ0301000000123456789012*ALT-ACC:CZ1503000000003456789012*AM:1234.56*CC:CZK*X-VS:2016001234',
             $string->__toString()
         );
-
 
         $string = QRPlatba::create('12-3456789012/0100')
             ->addAlternativeAccount('3456789012/0300')
