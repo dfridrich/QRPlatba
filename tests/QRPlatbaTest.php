@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the library "QRPlatba".
  *
@@ -11,26 +13,24 @@
 
 use Defr\QRPlatba\QRPlatba;
 use Defr\QRPlatba\QRPlatbaException;
+use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\Result\ResultInterface;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Class QRPlatbaTest.
- */
 class QRPlatbaTest extends TestCase
 {
     public function testFakeCurrencyString()
     {
         self::expectException(InvalidArgumentException::class);
 
-        QRPlatba::create('12-3456789012/0100', '1234.56', '2016001234')
+        QRPlatba::create('12-3456789012/0100', 1234.56, '2016001234')
             ->setMessage('Düakrítičs')
             ->setCurrency('FAKE');
     }
 
     public function testCzkString()
     {
-        $string = QRPlatba::create('12-3456789012/0100', '1234.56', '2016001234')
+        $string = QRPlatba::create('12-3456789012/0100', 1234.56, '2016001234')
             ->setMessage('Düakrítičs');
 
         $this->assertSame(
@@ -38,7 +38,7 @@ class QRPlatbaTest extends TestCase
             $string->__toString()
         );
 
-        $string = QRPlatba::create('12-3456789012/0100', '1234.56', '2016001234')
+        $string = QRPlatba::create('12-3456789012/0100', 1234.56, '2016001234')
             ->setMessage('Düakrítičs')
             ->setCurrency('CZK');
 
@@ -50,7 +50,7 @@ class QRPlatbaTest extends TestCase
 
     public function testEurString()
     {
-        $string = QRPlatba::create('12-3456789012/0100', '1234.56', '2016001234')
+        $string = QRPlatba::create('12-3456789012/0100', 1234.56, '2016001234')
             ->setMessage('Düakrítičs')
             ->setCurrency('EUR');
 
@@ -62,14 +62,14 @@ class QRPlatbaTest extends TestCase
 
     public function testIBAN()
     {
-        $string = QRPlatba::create('CZ6508000000192000145399', '1234.56', '2016001234');
+        $string = QRPlatba::create('CZ6508000000192000145399', 1234.56, '2016001234');
 
         $this->assertSame(
             'SPD*1.0*ACC:CZ6508000000192000145399*AM:1234.56*CC:CZK*X-VS:2016001234',
             $string->__toString()
         );
 
-        $string = QRPlatba::create('CZ6508000000192000145399', '1234.56', '2016001234');
+        $string = QRPlatba::create('CZ6508000000192000145399', 1234.56, '2016001234');
         $string->setIBAN('CZ6508000000192000145399');
 
         $this->assertSame(
@@ -78,18 +78,18 @@ class QRPlatbaTest extends TestCase
         );
     }
 
-    public function testQrCodeInstante()
+    public function testQrCodeInstance()
     {
         $qrPlatba = QRPlatba::create('12-3456789012/0100', 987.60)
             ->setMessage('QR platba je parádní!')
             ->getQRCodeInstance();
 
-        $this->assertInstanceOf(ResultInterface::class, $qrPlatba);
+        $this->assertInstanceOf(QrCode::class, $qrPlatba);
     }
 
     public function testRecipientName()
     {
-        $string = QRPlatba::create('12-3456789012/0100', '1234.56', '2016001234')
+        $string = QRPlatba::create('12-3456789012/0100', 1234.56, '2016001234')
             ->setRecipientName('Düakrítičs');
 
         $this->assertSame(
@@ -100,7 +100,7 @@ class QRPlatbaTest extends TestCase
 
     public function testConstantSymbolString()
     {
-        $string = QRPlatba::create('12-3456789012/0100', '1234.56', '2016001234')
+        $string = QRPlatba::create('12-3456789012/0100', 1234.56, '2016001234')
             ->setConstantSymbol('0008');
 
         $this->assertSame(
@@ -111,7 +111,7 @@ class QRPlatbaTest extends TestCase
 
     public function testAlternativeAccount()
     {
-        $string = QRPlatba::create('12-3456789012/0100', '1234.56', '2016001234')
+        $string = QRPlatba::create('12-3456789012/0100', 1234.56, '2016001234')
             ->addAlternativeAccount('3456789012/0300');
 
         $this->assertSame(
