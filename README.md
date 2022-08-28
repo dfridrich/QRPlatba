@@ -55,35 +55,35 @@ echo $qrPlatba->getQRCodeImage(); // Zobrazí <img> tag s kódem, viz níže
 
 Ukázky (viz `test/OutputTest.php`), zkuste si je naskenovat v bankovnictví nebo třeba iDokladu jako QR Fakturu:
 
-**QR Platba (PNG):**
-![QR Platba (PNG)](examples/qr_platba.png)
+**QR Platba (PNG):**<br>
+<img src="examples/qr_platba.png" width=200>
 
-**QR Platba v EUR (PNG):**
-![QR Platba v EUR (PNG)](examples/qr_platba_eur.png)
+**QR Platba v EUR (PNG):**<br>
+<img src="examples/qr_platba_eur.png" width=200>
 
-**QR Platba (SVG):**
-![QR Platba (SVG)](examples/qr_platba.svg)
+**QR Platba (SVG):**<br>
+<img src="examples/qr_platba.svg" width=200>
 
-**QR Platba a popisek (PNG):**
-![QR Platba a popisek (PNG)](examples/qr_platba_popisek.png)
+**QR Platba a popisek (PNG):**<br>
+<img src="examples/qr_platba_popisek.png" width=200>
 
-**QR Platba a popisek v EUR (PNG):**
-![QR Platba a popisek v EUR (PNG)](examples/qr_platba_popisek_eur.png)
+**QR Platba a popisek v EUR (PNG):**<br>
+<img src="examples/qr_platba_popisek_eur.png" width=200>
 
-**QR Platba a popisek (SVG):**
-![QR Platba a popisek (SVG)](examples/qr_platba_popisek.svg)
+**QR Platba a popisek (SVG):**<br>
+<img src="examples/qr_platba_popisek.svg" width=200>
 
-**QR Platba+F a popisek (PNG):**
-![QR Platba+F a popisek (PNG)](examples/qr_platba_a_faktura_popisek.png)
+**QR Platba+F a popisek (PNG):**<br>
+<img src="examples/qr_platba_a_faktura_popisek.png" width=200>
 
-**QR Platba+F a popisek v EUR (PNG):**
-![QR Platba+F a popisek v EUR (PNG)](examples/qr_platba_a_faktura_popisek_eur.png)
+**QR Platba+F a popisek v EUR (PNG):**<br>
+<img src="examples/qr_platba_a_faktura_popisek_eur.png" width=200>
 
-**QR Platba+F a popisek (SVG):**
-![QR Platba+F a popisek (SVG)](examples/qr_platba_a_faktura_popisek.svg)
+**QR Platba+F a popisek (SVG):**<br>
+<img src="examples/qr_platba_a_faktura_popisek.svg" width=200>
 
-**QR Faktura bez platby (SVG):**
-![QR Faktura bez platby (SVG)](examples/qr_faktura.png)
+**QR Faktura bez platby (SVG):**<br>
+<img src="examples/qr_faktura.png" width=200>
 
 Lze použít i jednodušší zápis:
 
