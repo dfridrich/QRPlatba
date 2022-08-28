@@ -1,9 +1,11 @@
-# QR Platba (v2)
+# QR Platba a QR Faktura
 
 [![Latest Stable Version](https://poser.pugx.org/dfridrich/qr-platba/v/stable)](https://packagist.org/packages/dfridrich/qr-platba)
 [![Total Downloads](https://poser.pugx.org/dfridrich/qr-platba/downloads)](https://packagist.org/packages/dfridrich/qr-platba)
 [![Build Status](https://travis-ci.org/dfridrich/QRPlatba.svg)](https://travis-ci.org/dfridrich/QRPlatba)
 [![Coverage Status](https://coveralls.io/repos/github/dfridrich/QRPlatba/badge.svg?branch=master)](https://coveralls.io/github/dfridrich/QRPlatba?branch=master)
+
+![QR Platba 2](logo.png)
 
 Knihovna pro generování QR plateb v PHP. QR platba zjednodušuje koncovému uživateli
 provedení příkazu k úhradě, protože obsahuje veškeré potřebné údaje, které stačí jen
@@ -14,7 +16,7 @@ Tato knihovna umožňuje:
 - zobrazení obrázku v ```<img>``` tagu, který obsahuje v ```src``` rovnou data-uri s QR kódem, takže vygenerovaný
 obrázek tak není třeba ukládat na server (```$qrPlatba->getQRCodeImage()```)
 - uložení obrázku s QR kódem (```$qrPlatba->saveQRCodeImage()```)
-- získání data-uri (```$qrPlatba->getQRCodeInstance()->getDataUri()```)
+- získání data-uri (```$qrPlatba->getDataUri()```)
 - získání instance objektu [QrCode](https://github.com/endroid/QrCode) (```$qrPlatba->getQRCodeInstance()```) 
 
 QRPlatbu v současné době podporují tyto banky:
@@ -39,7 +41,7 @@ use Defr\QRPlatba\QRPlatba;
 $qrPlatba = new QRPlatba();
 
 $qrPlatba->setAccount('12-3456789012/0100') // nastavení č. účtu
-    ->setIBAN('SK3112000000198742637541') // nastavení č. účtu
+    ->setIBAN('CZ3112000000198742637541') // nastavení č. účtu
     ->setVariableSymbol('2016001234')
     ->setMessage('Toto je první QR platba.')
     ->setConstantSymbol('0308')
@@ -51,13 +53,37 @@ $qrPlatba->setAccount('12-3456789012/0100') // nastavení č. účtu
 echo $qrPlatba->getQRCodeImage(); // Zobrazí <img> tag s kódem, viz níže  
 ```
 
-CZ účet s CZK:
+Ukázky (viz `test/OutputTest.php`), zkuste si je naskenovat v bankovnictví nebo třeba iDokladu jako QR Fakturu:
 
-![Ukázka](qrcode_cz.png)
+**QR Platba (PNG):**
+![QR Platba (PNG)](examples/qr_platba.png)
 
-SK IBAN s EUR:
+**QR Platba v EUR (PNG):**
+![QR Platba v EUR (PNG)](examples/qr_platba_eur.png)
 
-![Ukázka](qrcode_sk.png)
+**QR Platba (SVG):**
+![QR Platba (SVG)](examples/qr_platba.svg)
+
+**QR Platba a popisek (PNG):**
+![QR Platba a popisek (PNG)](examples/qr_platba_popisek.png)
+
+**QR Platba a popisek v EUR (PNG):**
+![QR Platba a popisek v EUR (PNG)](examples/qr_platba_popisek_eur.png)
+
+**QR Platba a popisek (SVG):**
+![QR Platba a popisek (SVG)](examples/qr_platba_popisek.svg)
+
+**QR Platba+F a popisek (PNG):**
+![QR Platba+F a popisek (PNG)](examples/qr_platba_a_faktura_popisek.png)
+
+**QR Platba+F a popisek v EUR (PNG):**
+![QR Platba+F a popisek v EUR (PNG)](examples/qr_platba_a_faktura_popisek_eur.png)
+
+**QR Platba+F a popisek (SVG):**
+![QR Platba+F a popisek (SVG)](examples/qr_platba_a_faktura_popisek.svg)
+
+**QR Faktura bez platby (SVG):**
+![QR Faktura bez platby (SVG)](examples/qr_faktura.png)
 
 Lze použít i jednodušší zápis:
 
@@ -84,27 +110,30 @@ $qrPlatba->saveQRCodeImage("qrcode.png", "png", 100);
 
 // Uloží svg o velikosti 100x100 px
 $qrPlatba->saveQRCodeImage("qrcode.svg", "svg", 100);
+
+// Generování jen QR Faktury
+$qrPlatba->setIsOnlyInvoice(true)->setLabel('QR Faktura');
 ```
 
 Aktuální možné formáty jsou: 
-* Png
-* Svg
-* Eps
-* binární
+* PNG
+* SVG
 
-Pro další je potřeba dopsat vlastní Writter
+Pro další je potřeba dopsat vlastní Writer
 
 Zobrazení data-uri
 ```php
 // data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAFAAQMAAAD3XjfpAAAA...
-echo $qrPlatba->getQRCodeInstance()->getDataUri();
+echo $qrPlatba->getDataUri();
 ```
 
 ## Odkazy
 
-- Dokumentace - http://dfridrich.github.io/QRPlatba/
 - Oficiální web QR Platby - http://qr-platba.cz/
+- Oficiální web QR Faktury - http://qr-faktura.cz/
 - Repozitář, který mě inspiroval - https://github.com/snoblucha/QRPlatba
+- Fork, ze kterého jsem zpětně přidal a upravil implementaci QR Faktury - https://github.com/bonami/qr-platba
+- <a href="https://www.freepik.com/free-vector/scan-pay-concept-illustration_18840607.htm#query=qr%20code%20scanner&position=27&from_view=search">Image by storyset</a> on Freepik
 
 ## Contributing
 

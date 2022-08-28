@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the library "QRPlatba".
  *
@@ -13,9 +15,6 @@ use Defr\QRPlatba\QRPlatba;
 use Defr\QRPlatba\QRPlatbaException;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Class QRPlatbaTest.
- */
 class IBANTest extends TestCase
 {
 
