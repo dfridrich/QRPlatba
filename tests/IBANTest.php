@@ -29,7 +29,6 @@ class IBANTest extends TestCase
         );
     }
 
-
     public function testPrepareIban()
     {
         $qrplatba = new QRPlatba();
@@ -44,13 +43,17 @@ class IBANTest extends TestCase
             $qrplatba->prepareIban('1234567987/0800')
         );
 
+        $this->assertSame(
+            'CZ7020100000002600118167',
+            $qrplatba->prepareIban('2600118167/2010')
+        );
+
         $string = QRPlatba::create('CZ0301000000123456789012');
         $this->assertSame(
             'SPD*1.0*ACC:CZ0301000000123456789012*CC:CZK',
             $string->__toString()
         );
     }
-
 
     public function testInvalidIban()
     {
@@ -60,5 +63,12 @@ class IBANTest extends TestCase
         $qrplatba->prepareIban('CZ36201000000025013011935555');
     }
 
+    public function testAccountTOIBAN()
+    {
+        self::assertSame(
+            'CZ7020100000002600118167',
+            QRPlatba::accountToIban('2600118167/2010')
+        );
+    }
 
 }
