@@ -17,9 +17,9 @@
     ],
     "require": {
         "php": ">=7.4.0",
-        "endroid/qr-code": "^4",
         "jschaedl/iban-validation": "^1.4",
-        "ext-mbstring": "*"
+        "ext-mbstring": "*",
+        "honzito/bacon-qr-code-basis": ">=2023.208.1"
     },
     "autoload": {
         "psr-4": {
@@ -28,9 +28,5 @@
         "files": [
             "src/bcmod.php"
         ]
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^9",
-        "fpdf/fpdf": "^1.84"
     }
 }
