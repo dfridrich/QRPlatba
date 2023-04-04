@@ -11,7 +11,7 @@ if (false === function_exists('bcmod')) {
      * @param $x
      * @param $y
      *
-     * @return int
+     * @return string
      *
      * @see https://stackoverflow.com/a/10626609
      */
@@ -27,6 +27,6 @@ if (false === function_exists('bcmod')) {
             $mod = $a % $y;
         } while (strlen($x));
 
-        return (int)$mod;
+        return (string)$mod;
     }
 }
