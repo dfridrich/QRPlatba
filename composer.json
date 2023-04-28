@@ -1,5 +1,5 @@
 {
-    "name": "dfridrich/qr-platba",
+    "name": "honzito/qr-platba",
     "type": "library",
     "description": "Generování QR Plateb a QR Faktur v PHP.",
     "keywords": [
