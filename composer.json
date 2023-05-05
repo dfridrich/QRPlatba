@@ -15,11 +15,17 @@
             "email": "fridrich.dennis@gmail.com"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/honzito/iban-validation.git"
+        }
+    ],
     "require": {
         "php": ">=7.4.0",
-        "jschaedl/iban-validation": "^1.4",
-        "ext-mbstring": "*",
-        "honzito/bacon-qr-code-basis": ">=2023.208.1"
+        "honzito/iban-validation": "@dev",
+        "honzito/bacon-qr-code-basis": ">=2023.208.1",
+        "ext-mbstring": "*"
     },
     "autoload": {
         "psr-4": {
@@ -28,5 +34,7 @@
         "files": [
             "src/bcmod.php"
         ]
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable" : true
 }
