@@ -5,7 +5,7 @@ if (false === function_exists('bcmod')) {
     /**
      * bcmod - get modulus (substitute for bcmod)
      * string bcmod ( string left_operand, int modulus )
-     * left_operand can be really big, but be carefull with modulus :(
+     * left_operand can be really big, but be careful with modulus :(
      * by Andrius Baranauskas and Laurynas Butkus :) Vilnius, Lithuania.
      *
      * @param $x
