@@ -5,19 +5,19 @@ if (false === function_exists('bcmod')) {
     /**
      * bcmod - get modulus (substitute for bcmod)
      * string bcmod ( string left_operand, int modulus )
-     * left_operand can be really big, but be carefull with modulus :(
+     * left_operand can be really big, but be careful with modulus :(
      * by Andrius Baranauskas and Laurynas Butkus :) Vilnius, Lithuania.
      *
      * @param $x
      * @param $y
      *
-     * @return int
+     * @return string
      *
      * @see https://stackoverflow.com/a/10626609
      */
     function bcmod($x, $y)
     {
-        // how many numbers to take at once? carefull not to exceed (int)
+        // how many numbers to take at once? careful not to exceed (int)
         $take = 5;
         $mod = '';
 
@@ -27,6 +27,6 @@ if (false === function_exists('bcmod')) {
             $mod = $a % $y;
         } while (strlen($x));
 
-        return (int)$mod;
+        return (string)$mod;
     }
 }

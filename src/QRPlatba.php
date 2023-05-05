@@ -13,17 +13,10 @@ declare(strict_types=1);
 
 namespace Defr\QRPlatba;
 
+use BaconQrCode\Common\ErrorCorrectionLevel;
+use BaconQrCode\Renderer\GDLibRenderer;
+use BaconQrCode\Writer;
 use DateTime;
-use Endroid\QrCode\Color\Color;
-use Endroid\QrCode\Encoding\Encoding;
-use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelMedium;
-use Endroid\QrCode\Label\Alignment\LabelAlignmentLeft;
-use Endroid\QrCode\Label\Font\OpenSans;
-use Endroid\QrCode\Label\Label;
-use Endroid\QrCode\QrCode;
-use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeEnlarge;
-use Endroid\QrCode\Writer\PngWriter;
-use Endroid\QrCode\Writer\SvgWriter;
 use Iban\Validation\Iban;
 use Iban\Validation\Validator;
 
@@ -184,8 +177,6 @@ class QRPlatba
      * Přepínač, zda se má generovat pouze QR Faktura
      */
     private $isOnlyInvoice = false;
-
-    private ?string $label = null;
 
     /**
      * Kontruktor nové platby.
@@ -615,13 +606,6 @@ class QRPlatba
         return $this;
     }
 
-    public function setLabel(string $label): self
-    {
-        $this->label = $label;
-
-        return $this;
-    }
-
     /**
      * Metoda vrátí QR Platbu jako textový řetězec.
      *
@@ -686,50 +670,84 @@ class QRPlatba
      */
     public function getDataUri(int $size = 300, int $margin = 10): string
     {
-        $qrCode = $this->getQRCodeInstance($size, $margin);
-        $writer = new PngWriter();
+        $renderer = new GDLibRenderer($size, $margin);
+        $writer   = new Writer($renderer);
+//$writer->writeFile('Hello World!', 'qrcode.png');
 
-        return $writer->write($qrCode, null, $this->getLabelInstance())->getDataUri();
+        $qr_image = base64_encode($writer->writeString((string) $this, 'UTF-8', ErrorCorrectionLevel::M()));
+        //$qr_image = base64_encode($writer->writeString("Hola, hola"));
+        return "data:image/png;base64,$qr_image";
+
+
+//        $renderer = new ImageRenderer(
+//            new RendererStyle($size),
+//            //new ImagickImageBackEnd()
+//            new SvgImageBackEnd()
+//        );
+//        $writer = new Writer($renderer);
+//        return 'data:image/svg+xml;base64,'.base64_encode($writer->writeString((string) $this, 'UTF-8', ErrorCorrectionLevel::M()));
+
+
+
+//        return QrCode::create((string) $this)
+//            ->setSize($size - ($margin * 2))
+//            ->setEncoding(new Encoding('UTF-8'))
+//            ->setErrorCorrectionLevel(new ErrorCorrectionLevelMedium())
+//            ->setMargin($margin)
+//            ->setRoundBlockSizeMode(new RoundBlockSizeModeEnlarge())
+//            ->setForegroundColor(new Color(0, 0, 0, 0))
+//            ->setBackgroundColor(new Color(255, 255, 255, 0));
     }
 
-    /**
-     * Uložení QR kódu do souboru.
-     * @throws QRPlatbaException
-     */
-    public function saveQRCodeImage(?string $filename = null, ?string $format = 'png', int $size = 300, int $margin = 10): self
-    {
-        $qrCode = $this->getQRCodeInstance($size, $margin);
+//    /**
+//     * Metoda vrátí QR kód jako HTML tag, případně jako data-uri.
+//     */
+//    public function getDataUri(int $size = 300, int $margin = 10): string
+//    {
+//        $qrCode = $this->getQRCodeInstance($size, $margin);
+//        $writer = new PngWriter();
+//
+//        return $writer->write($qrCode, null)->getDataUri();
+//    }
 
-        switch ($format) {
-            case self::FORMAT_PNG:
-                $writer = new PngWriter();
-                break;
-            case self::FORMAT_SVG:
-                $writer = new SvgWriter();
-                break;
-            default:
-                throw new QRPlatbaException('Unknown file format');
-        }
+//    /**
+//     * Uložení QR kódu do souboru.
+//     * @throws QRPlatbaException
+//     */
+//    public function saveQRCodeImage(?string $filename = null, ?string $format = 'png', int $size = 300, int $margin = 10): self
+//    {
+//        $qrCode = $this->getQRCodeInstance($size, $margin);
+//
+//        switch ($format) {
+//            case self::FORMAT_PNG:
+//                $writer = new PngWriter();
+//                break;
+//            case self::FORMAT_SVG:
+//                $writer = new SvgWriter();
+//                break;
+//            default:
+//                throw new QRPlatbaException('Unknown file format');
+//        }
+//
+//        $writer->write($qrCode, null)->saveToFile($filename);
+//
+//        return $this;
+//    }
 
-        $writer->write($qrCode, null, $this->getLabelInstance())->saveToFile($filename);
-
-        return $this;
-    }
-
-    /**
-     * Instance třídy QrCode pro libovolné úpravy (barevnost, atd.).
-     */
-    public function getQRCodeInstance(int $size = 300, int $margin = 10): QrCode
-    {
-        return QrCode::create((string) $this)
-            ->setSize($size - ($margin * 2))
-            ->setEncoding(new Encoding('UTF-8'))
-            ->setErrorCorrectionLevel(new ErrorCorrectionLevelMedium())
-            ->setMargin($margin)
-            ->setRoundBlockSizeMode(new RoundBlockSizeModeEnlarge())
-            ->setForegroundColor(new Color(0, 0, 0, 0))
-            ->setBackgroundColor(new Color(255, 255, 255, 0));
-    }
+//    /**
+//     * Instance třídy QrCode pro libovolné úpravy (barevnost, atd.).
+//     */
+//    public function getQRCodeInstance(int $size = 300, int $margin = 10): QrCode
+//    {
+//        return QrCode::create((string) $this)
+//            ->setSize($size - ($margin * 2))
+//            ->setEncoding(new Encoding('UTF-8'))
+//            ->setErrorCorrectionLevel(new ErrorCorrectionLevelMedium())
+//            ->setMargin($margin)
+//            ->setRoundBlockSizeMode(new RoundBlockSizeModeEnlarge())
+//            ->setForegroundColor(new Color(0, 0, 0, 0))
+//            ->setBackgroundColor(new Color(255, 255, 255, 0));
+//    }
 
     /**
      * Převedení čísla účtu na formát IBAN.
@@ -747,7 +765,7 @@ class QRPlatba
         if (false === mb_strpos($accountNumber[0], '-')) {
             $acc = $accountNumber[0];
         } else {
-            list($pre, $acc) = explode('-', $accountNumber[0]);
+            [$pre, $acc] = explode('-', $accountNumber[0]);
         }
 
         $accountPart = sprintf('%06d%010s', $pre, $acc);
@@ -794,17 +812,5 @@ class QRPlatba
         );
 
         return $string;
-    }
-
-    private function getLabelInstance(): ?Label
-    {
-        if ($this->label !== null) {
-            return Label::create($this->label)
-                ->setAlignment(new LabelAlignmentLeft())
-                ->setFont(new OpenSans())
-                ->setTextColor(new Color(0, 0, 0, 0));
-        }
-
-        return null;
     }
 }
